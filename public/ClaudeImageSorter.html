@@ -939,7 +939,7 @@
                 <h3>Import from Cooper Hewitt</h3>
                 <p>Import Frederic Edwin Church artworks from the Cooper Hewitt Smithsonian Design Museum. You can search by keywords or import all available works.</p>
                 <p style="font-size: 12px; color: #666; margin-top: 10px;">
-                    <strong>Requirements:</strong> Make sure your Node.js server is running on port 3000. 
+                    <strong>Requirements:</strong> Connected to Firebase Functions for live Cooper Hewitt data. 
                     In terminal, run: <code>cd /Users/markleyboyer/church-proxy && node server.js</code>
                 </p>
             </div>
@@ -1559,7 +1559,7 @@
                         let errorMessage = `API request failed: ${response.status} ${response.statusText}`;
                         
                         if (response.status === 0 || !response.status) {
-                            errorMessage = 'Cannot connect to server. Make sure your Node.js server is running on port 3000.';
+                            errorMessage = 'Cannot connect to API. Please check your internet connection and try again.';
                         } else if (response.status === 404) {
                             errorMessage = 'API endpoint not found. Check that /api/church is available on your server.';
                         }
@@ -1587,37 +1587,11 @@
                     console.log(`Found ${data.objects.length} artworks. Starting to process...`);
                     this.showCooperHewittStatusMessage(`Found ${data.objects.length} artworks. Processing images...`, 'info');
                     
-                    // First, test with a simple dummy image to see if the UI works
-                    console.log('Testing with dummy image first...');
-                    const testImage = {
-                        id: 'test-' + Date.now(),
-                        filename: 'test-artwork.jpg',
-                        preview: 'data:image/svg+xml;base64,' + btoa(`
-                            <svg width="200" height="150" xmlns="http://www.w3.org/2000/svg">
-                                <rect width="200" height="150" fill="#4CAF50"/>
-                                <text x="100" y="75" text-anchor="middle" fill="white" font-family="Arial" font-size="14">TEST IMAGE</text>
-                                <text x="100" y="95" text-anchor="middle" fill="white" font-family="Arial" font-size="12">Cooper Hewitt</text>
-                            </svg>
-                        `),
-                        metadata: {
-                            title: 'Test Cooper Hewitt Import',
-                            creator: 'Frederic Edwin Church',
-                            year: '2025',
-                            location: 'Test Location',
-                            description: 'This is a test image to verify the import functionality',
-                            subject: 'Test'
-                        }
-                    };
-                    
-                    appImages.push(testImage);
-                    console.log('Test image added. appImages length:', appImages.length);
-                    this.updateUI();
-                    
-                    let importedCount = 1; // Count the test image
+                    let importedCount = 0;
                     let processedCount = 0;
                     
-                    // Test with just the first few artworks to debug
-                    const artworksToProcess = data.objects.slice(0, Math.min(5, data.objects.length));
+                    // Process artworks (limit to reasonable number for performance)
+                    const artworksToProcess = data.objects.slice(0, Math.min(limit, data.objects.length));
                     console.log('Processing first', artworksToProcess.length, 'artworks for testing');
                     
                     for (const artwork of artworksToProcess) {
@@ -1699,6 +1673,23 @@
             async importCooperHewittImage(artwork, imageUrl) {
                 console.log('importCooperHewittImage called with:', artwork.title, imageUrl);
                 return new Promise((resolve, reject) => {
+                    // Create metadata for the artwork
+                    const metadata = {
+                        title: artwork.title || 'Untitled',
+                        creator: 'Frederic Edwin Church',
+                        year: this.extractYear(artwork.display_date),
+                        location: this.extractLocation(artwork),
+                        description: this.extractDescription(artwork),
+                        subject: this.extractSubject(artwork),
+                        // Additional Cooper Hewitt specific metadata
+                        accessionNumber: artwork.accession_number,
+                        medium: artwork.medium,
+                        measurements: artwork.measurements?.dimensions?.join(', '),
+                        geography: artwork.geography?.name || artwork.geography?.country,
+                        department: artwork.department?.join(', '),
+                        url: artwork.url
+                    };
+                    
                     if (!imageUrl) {
                         console.log('No image URL provided, creating placeholder');
                         // Create a placeholder for artworks without images
@@ -1708,24 +1699,11 @@
                             preview: 'data:image/svg+xml;base64,' + btoa(`
                                 <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
                                     <rect width="200" height="200" fill="#f0f0f0"/>
-                                    <text x="100" y="100" text-anchor="middle" fill="#999" font-family="Arial" font-size="12">No Image</text>
+                                    <text x="100" y="90" text-anchor="middle" fill="#999" font-family="Arial" font-size="10">${(artwork.title || 'No Title').substring(0, 30)}</text>
+                                    <text x="100" y="110" text-anchor="middle" fill="#999" font-family="Arial" font-size="8">No Image Available</text>
                                 </svg>
                             `),
-                            metadata: {
-                                title: artwork.title || 'Untitled',
-                                creator: 'Frederic Edwin Church',
-                                year: this.extractYear(artwork.display_date),
-                                location: this.extractLocation(artwork),
-                                description: this.extractDescription(artwork),
-                                subject: this.extractSubject(artwork),
-                                // Additional Cooper Hewitt specific metadata
-                                accessionNumber: artwork.accession_number,
-                                medium: artwork.medium,
-                                measurements: artwork.measurements?.dimensions?.join(', '),
-                                geography: artwork.geography?.name || artwork.geography?.country,
-                                department: artwork.department?.join(', '),
-                                url: artwork.url
-                            }
+                            metadata: metadata
                         };
                         
                         appImages.push(placeholderImage);
@@ -1737,51 +1715,68 @@
                     console.log('Creating Image object for URL:', imageUrl);
                     const img = new Image();
                     
-                    // Try without crossOrigin first, then with if it fails
+                    // Set crossOrigin to try to handle CORS
+                    img.crossOrigin = 'anonymous';
+                    
                     img.onload = () => {
                         console.log('Image loaded successfully for:', artwork.title);
                         try {
                             // Create canvas to convert image to data URL
                             const canvas = document.createElement('canvas');
                             const ctx = canvas.getContext('2d');
-                            canvas.width = img.width;
-                            canvas.height = img.height;
-                            ctx.drawImage(img, 0, 0);
+                            
+                            // Resize image to reasonable size for performance
+                            const maxSize = 400;
+                            let { width, height } = img;
+                            if (width > maxSize || height > maxSize) {
+                                const ratio = Math.min(maxSize / width, maxSize / height);
+                                width *= ratio;
+                                height *= ratio;
+                            }
+                            
+                            canvas.width = width;
+                            canvas.height = height;
+                            ctx.drawImage(img, 0, 0, width, height);
                             
                             const artworkImage = {
                                 id: Date.now() + Math.random(),
                                 filename: `${artwork.accession_number || artwork.title || 'artwork'}.jpg`,
                                 preview: canvas.toDataURL('image/jpeg', 0.8),
-                            metadata: {
-                                title: artwork.title || 'Untitled',
-                                creator: 'Frederic Edwin Church',
-                                year: this.extractYear(artwork.display_date),
-                                location: this.extractLocation(artwork),
-                                description: this.extractDescription(artwork),
-                                subject: this.extractSubject(artwork),
-                                // Additional Cooper Hewitt specific metadata
-                                accessionNumber: artwork.accession_number,
-                                medium: artwork.medium,
-                                measurements: artwork.measurements?.dimensions?.join(', '),
-                                geography: artwork.geography?.name || artwork.geography?.country,
-                                department: artwork.department?.join(', '),
-                                url: artwork.url
-                            }
-                        };
-                        
+                                metadata: metadata
+                            };
+                            
                             appImages.push(artworkImage);
                             console.log('Artwork image added to appImages, total count:', appImages.length);
                             resolve();
                         } catch (canvasError) {
                             console.error('Canvas error for artwork:', artwork.title, canvasError);
-                            reject(new Error('Failed to process image: ' + canvasError.message));
+                            // If canvas fails, create placeholder with image reference
+                            const fallbackImage = {
+                                id: Date.now() + Math.random(),
+                                filename: `${artwork.accession_number || artwork.title || 'artwork'}.jpg`,
+                                preview: imageUrl, // Use the original URL as fallback
+                                metadata: metadata
+                            };
+                            appImages.push(fallbackImage);
+                            console.log('Fallback image added for:', artwork.title);
+                            resolve();
                         }
                     };
                     
                     img.onerror = (error) => {
                         console.error('Image load error for URL:', imageUrl);
                         console.error('Error event:', error);
-                        reject(new Error('Failed to load image from URL: ' + imageUrl));
+                        
+                        // Instead of rejecting, create a fallback image with the URL
+                        const fallbackImage = {
+                            id: Date.now() + Math.random(),
+                            filename: `${artwork.accession_number || artwork.title || 'artwork'}.jpg`,
+                            preview: imageUrl, // Use the original URL even if it failed to load via canvas
+                            metadata: metadata
+                        };
+                        appImages.push(fallbackImage);
+                        console.log('Fallback image created due to load error for:', artwork.title);
+                        resolve(); // Resolve instead of reject
                     };
                     
                     console.log('Setting image src to:', imageUrl);
@@ -1856,11 +1851,11 @@
             
             async testServerConnection() {
                 try {
-                    const response = await fetch('http://localhost:3000/api/church?pp=1', {
+                    const response = await fetch('/api/church?pp=1', {
                         method: 'GET',
                         mode: 'cors',
                     }).catch(() => {
-                        return fetch('http://localhost:3000/api/church?pp=1');
+                        return fetch('/api/church?pp=1');
                     });
                     
                     if (response.ok) {
@@ -1870,7 +1865,7 @@
                         this.showCooperHewittStatusMessage(`Server responded with error: ${response.status}`, 'error');
                     }
                 } catch (error) {
-                    this.showCooperHewittStatusMessage('Cannot connect to server. Make sure your Node.js server is running on port 3000.', 'error');
+                    this.showCooperHewittStatusMessage('Cannot connect to API. Please check your internet connection.', 'error');
                 }
             }
         }

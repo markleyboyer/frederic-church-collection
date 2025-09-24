@@ -3,7 +3,10 @@ import fetch from "node-fetch";
 
 const GRAPHQL_ENDPOINT = "https://api.cooperhewitt.org/";
 
-export const api = onRequest({ cors: true }, async (req, res) => {
+export const api = onRequest({ 
+  cors: true,
+  invoker: "public"
+}, async (req, res) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     res.set('Access-Control-Allow-Origin', '*');
