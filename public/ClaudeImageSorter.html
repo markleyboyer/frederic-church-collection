@@ -84,18 +84,213 @@
             background: #f8f8f8;
         }
         
+        /* Cooper Hewitt Browser Styles */
+        .cooper-hewitt-browser {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            width: 100%;
+            max-width: none;
+        }
+        
+        .browser-header {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            padding: 12px;
+            background: #1a1a1a;
+            border-radius: 6px;
+            border: 1px solid #333;
+        }
+        
+        .browser-header h2 {
+            font-size: 18px;
+            margin: 0;
+            color: white;
+        }
+        
+        .browser-pager {
+            margin: 8px 0;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            color: #333;
+        }
+        
+        .cooper-hewitt-browser table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 8px;
+            background: #1a1a1a;
+            table-layout: auto;
+        }
+        
+        .cooper-hewitt-browser th,
+        .cooper-hewitt-browser td {
+            border: 1px solid #444;
+            padding: 6px 8px;
+            text-align: left;
+            vertical-align: top;
+            color: #ffffff;
+            font-size: 13px;
+        }
+        
+        .cooper-hewitt-browser th {
+            background: #2a2a2a;
+            position: sticky;
+            top: 0;
+            font-weight: 600;
+        }
+        
+        .cooper-hewitt-browser td img {
+            border-radius: 4px;
+        }
+        
+        .cooper-hewitt-browser .clickable-image {
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+        
+        .cooper-hewitt-browser .clickable-image:hover {
+            opacity: 0.8;
+        }
+        
+        .cooper-hewitt-browser .checkbox-cell {
+            text-align: center;
+            width: 40px;
+        }
+        
+        .cooper-hewitt-browser .image-cell {
+            text-align: center;
+            width: 100px;
+        }
+        
+        /* Selected artwork highlighting */
+        .cooper-hewitt-browser tr.selected {
+            background-color: #2a4a2a !important;
+        }
+        
+        .cooper-hewitt-browser tr.selected td {
+            background-color: #2a4a2a !important;
+        }
+        
+        /* Detailed view styles */
+        .cooper-hewitt-browser .artwork-card {
+            border: 1px solid #444;
+            margin-bottom: 16px;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #1a1a1a;
+            width: 100%;
+        }
+        
+        .cooper-hewitt-browser .artwork-card.selected {
+            border-color: #4CAF50;
+            background: #1a2a1a;
+        }
+        
+        /* Button styles within Cooper Hewitt browser */
+        .cooper-hewitt-browser button {
+            font: 14px inherit;
+            padding: 6px 10px;
+            background: #333;
+            border: 1px solid #444;
+            color: #ffffff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .cooper-hewitt-browser button:hover {
+            background: #444;
+        }
+        
+        .cooper-hewitt-browser button:disabled {
+            background: #555;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .cooper-hewitt-browser input[type="text"], 
+        .cooper-hewitt-browser input[type="number"] {
+            font: 14px inherit;
+            padding: 6px 10px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: #ffffff;
+            border-radius: 4px;
+        }
+        
+        .cooper-hewitt-browser input::placeholder {
+            color: #999;
+        }
+        
+        #ch-importSelected {
+            background: #4CAF50 !important;
+            border: 1px solid #45a049 !important;
+        }
+        
+        #ch-importSelected:hover {
+            background: #45a049 !important;
+        }
+        
         .import-header {
             background: #ddd;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             color: #555;
+        }
+        
+        .import-header h2 {
+            margin-bottom: 8px;
+        }
+        
+        /* Import Method Tabs */
+        .import-tabs {
+            display: flex;
+            background: #ccc;
+            border-bottom: 1px solid #bbb;
+        }
+        
+        .import-tab {
+            background: transparent;
+            border: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .import-tab:hover {
+            background: #ddd;
+            color: #333;
+        }
+        
+        .import-tab.active {
+            color: #333;
+            border-bottom-color: #007ACC;
+            background: #eee;
         }
         
         .import-content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            background: #f8f8f8;
+        }
+        
+        .import-method {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        .import-method.active {
+            display: flex;
         }
         
         .drop-zone {
@@ -752,70 +947,136 @@
     <div class="page active" id="import-page">
         <div class="import-header">
             <h2>Import & Organize Your Art Images</h2>
-            <p>Drag and drop images, then fill in metadata using the spreadsheet interface</p>
+            <p>Choose your import method below</p>
+        </div>
+        
+        <!-- Import Method Tabs -->
+        <div class="import-tabs">
+            <button class="import-tab active" onclick="showImportMethod('local')">Local Files</button>
+            <button class="import-tab" onclick="showImportMethod('sheets')">Google Sheets</button>
+            <button class="import-tab" onclick="showImportMethod('cooper-hewitt')">Cooper Hewitt Collection</button>
         </div>
         
         <div class="import-content">
-            <div class="drop-zone" id="dropZone">
-                <div class="drop-zone-icon">📁</div>
-                <h2>Drop images here</h2>
-                <p>Or click to browse files • Supports JPG, PNG, GIF, WebP</p>
-                <input type="file" id="fileInput" class="file-input" multiple accept="image/*">
-            </div>
-            
-            <div class="metadata-editor" id="metadataEditor">
-                <div class="editor-header">
-                    <h3>Image Metadata</h3>
-                    <div class="auto-fill-controls">
-                        <h4>Quick Fill Options</h4>
-                        <div class="auto-fill-row">
-                            <input type="text" id="bulkCreator" placeholder="Artist/Creator">
-                            <button class="auto-fill-btn" onclick="autofillColumn('creator')">Fill All</button>
+            <!-- Local Files Import -->
+            <div class="import-method active" id="import-local">
+                <div class="drop-zone" id="dropZone">
+                    <div class="drop-zone-icon">📁</div>
+                    <h2>Drop images here</h2>
+                    <p>Or click to browse files • Supports JPG, PNG, GIF, WebP</p>
+                    <input type="file" id="fileInput" class="file-input" multiple accept="image/*">
+                </div>
+                
+                <div class="metadata-editor" id="metadataEditor">
+                    <div class="editor-header">
+                        <h3>Image Metadata</h3>
+                        <div class="auto-fill-controls">
+                            <h4>Quick Fill Options</h4>
+                            <div class="auto-fill-row">
+                                <input type="text" id="bulkCreator" placeholder="Artist/Creator">
+                                <button class="auto-fill-btn" onclick="autofillColumn('creator')">Fill All</button>
+                            </div>
+                            <div class="auto-fill-row">
+                                <input type="text" id="bulkLocation" placeholder="Location">
+                                <button class="auto-fill-btn" onclick="autofillColumn('location')">Fill All</button>
+                            </div>
+                            <div class="auto-fill-row">
+                                <input type="number" id="bulkYear" placeholder="Year">
+                                <button class="auto-fill-btn" onclick="autofillColumn('year')">Fill All</button>
+                            </div>
                         </div>
-                        <div class="auto-fill-row">
-                            <input type="text" id="bulkLocation" placeholder="Location">
-                            <button class="auto-fill-btn" onclick="autofillColumn('location')">Fill All</button>
-                        </div>
-                        <div class="auto-fill-row">
-                            <input type="number" id="bulkYear" placeholder="Year">
-                            <button class="auto-fill-btn" onclick="autofillColumn('year')">Fill All</button>
-                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="metadata-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Preview</th>
+                                    <th style="width: 150px;">Filename</th>
+                                    <th style="width: 200px;">Title</th>
+                                    <th style="width: 150px;">Creator/Artist</th>
+                                    <th style="width: 100px;">Year</th>
+                                    <th style="width: 150px;">Location</th>
+                                    <th style="width: 250px;">Description</th>
+                                    <th style="width: 100px;">Subject/Tags</th>
+                                    <th style="width: 60px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="imageTableBody">
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 
-                <div class="table-container">
-                    <table class="metadata-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 100px;">Preview</th>
-                                <th style="width: 150px;">Filename</th>
-                                <th style="width: 200px;">Title</th>
-                                <th style="width: 150px;">Creator/Artist</th>
-                                <th style="width: 100px;">Year</th>
-                                <th style="width: 150px;">Location</th>
-                                <th style="width: 250px;">Description</th>
-                                <th style="width: 100px;">Subject/Tags</th>
-                                <th style="width: 60px;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="imageTableBody">
-                        </tbody>
-                    </table>
+                <div class="import-bottom-bar">
+                    <div class="file-count" id="fileCount">No images loaded</div>
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-danger" onclick="clearAllImages()">Clear All</button>
+                        <button class="btn btn-secondary" onclick="exportToCSV()">Export CSV</button>
+                        <button class="btn btn-primary" onclick="goToCanvas()">Go to Canvas</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="import-bottom-bar">
-            <div class="file-count" id="fileCount">No images loaded</div>
-            <div class="progress-bar" id="progressBar">
-                <div class="progress-fill" id="progressFill"></div>
+            
+            <!-- Google Sheets Import -->
+            <div class="import-method" id="import-sheets">
+                <div class="import-info" style="text-align: center; padding: 40px;">
+                    <h3>Import from Google Sheets</h3>
+                    <p>Import metadata and images from a Google Sheets document. Include columns for filename, title, creator, year, location, description, subject, and image_url (for direct image import).</p>
+                    <br>
+                    <button class="btn btn-primary" onclick="showGoogleSheetsModal()">Configure Google Sheets Import</button>
+                </div>
             </div>
-            <div class="button-group">
-                <button class="btn btn-danger" onclick="clearAllImages()">Clear All</button>
-                <button class="btn btn-secondary" onclick="exportToCSV()">Export CSV</button>
-                <button class="btn btn-secondary" onclick="showGoogleSheetsModal()">Import Google Sheets</button>
-                <button class="btn btn-secondary" onclick="showCooperHewittModal()">Import Cooper Hewitt</button>
-                <button class="btn btn-primary" onclick="goToCanvas()">Go to Canvas</button>
+            
+            <!-- Cooper Hewitt Import -->
+            <div class="import-method" id="import-cooper-hewitt">
+                <div class="cooper-hewitt-browser">
+                    <div class="browser-header">
+                        <h3 style="color: white; margin-bottom: 10px;">Browse Cooper Hewitt Collection</h3>
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <label style="color: white; font-size: 14px;">Query 
+                                <input id="ch-q" placeholder="optional keyword" style="width: 120px; margin-left: 5px;">
+                            </label>
+                            <label style="color: white; font-size: 14px;">Per page 
+                                <input id="ch-pp" type="number" value="20" min="1" max="100" style="width: 60px; margin-left: 5px;">
+                            </label>
+                            <button id="ch-go">Search</button>
+                            <button id="ch-toggleView">Detailed View</button>
+                        </div>
+                    </div>
+
+                    <div class="browser-pager">
+                        <button id="ch-prev">Prev</button>
+                        <span id="ch-info"></span>
+                        <button id="ch-next">Next</button>
+                        <button id="ch-importSelected" class="btn btn-primary" style="margin-left: 20px;">Import Selected to Canvas</button>
+                    </div>
+
+                    <!-- Table View -->
+                    <div style="max-height: 500px; overflow-y: auto; border: 1px solid #444; border-radius: 4px;">
+                        <table id="ch-table">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-cell">Select</th>
+                                    <th class="image-cell">Thumbnail</th>
+                                    <th>Title</th>
+                                    <th>Date</th>
+                                    <th>Accession</th>
+                                    <th>Medium</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ch-table-body"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Detailed View -->
+                    <div id="ch-detailed-view" style="display: none; max-height: 500px; overflow-y: auto; border: 1px solid #444; border-radius: 4px; padding: 15px; background: #1a1a1a;">
+                        <div id="ch-detailed-content"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1005,6 +1266,17 @@
             }
         }
         
+        // Import method navigation
+        function showImportMethod(methodName) {
+            // Update active tab
+            document.querySelectorAll('.import-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelector(`[onclick="showImportMethod('${methodName}')"]`).classList.add('active');
+            
+            // Update active method
+            document.querySelectorAll('.import-method').forEach(method => method.classList.remove('active'));
+            document.getElementById(`import-${methodName}`).classList.add('active');
+        }
+
         function updateCanvasVisibility() {
             const emptyCanvas = document.getElementById('emptyCanvas');
             const canvas = document.getElementById('canvas');
@@ -2552,7 +2824,8 @@
         }
         
         function showCooperHewittModal() {
-            imageImporter.showCooperHewittModal();
+            // Switch to Cooper Hewitt tab instead of showing modal
+            showImportMethod('cooper-hewitt');
         }
         
         function hideCooperHewittModal() {
@@ -2658,7 +2931,263 @@
         window.addEventListener('load', () => {
             imageImporter = new ImageImporter();
             updateCanvasVisibility();
+            initializeCooperHewittBrowser();
         });
+        
+        // Cooper Hewitt Collection Browser
+        let chPage = 1, chPages = 1, chIsDetailedView = false, chSelectedArtworks = [];
+        
+        function initializeCooperHewittBrowser() {
+            document.getElementById('ch-go').onclick = () => searchCooperHewitt();
+            document.getElementById('ch-prev').onclick = () => navigateCooperHewitt(-1);
+            document.getElementById('ch-next').onclick = () => navigateCooperHewitt(1);
+            document.getElementById('ch-toggleView').onclick = () => toggleCooperHewittView();
+            document.getElementById('ch-importSelected').onclick = () => importSelectedArtworks();
+            
+            // Load initial data
+            searchCooperHewitt();
+        }
+        
+        async function searchCooperHewitt() {
+            const query = document.getElementById('ch-q').value;
+            const perPage = parseInt(document.getElementById('ch-pp').value) || 20;
+            
+            try {
+                const params = new URLSearchParams();
+                if (query.trim()) {
+                    params.append('q', query.trim());
+                }
+                params.append('pp', perPage.toString());
+                params.append('page', chPage.toString());
+                
+                const response = await fetch(`/api/church?${params.toString()}`);
+                const data = await response.json();
+                
+                chPages = data.pages || 1;
+                updateCooperHewittPager(data);
+                
+                if (chIsDetailedView) {
+                    renderCooperHewittDetailedView(data);
+                } else {
+                    renderCooperHewittTableView(data);
+                }
+            } catch (error) {
+                console.error('Cooper Hewitt search error:', error);
+                document.getElementById('ch-table-body').innerHTML = `<tr><td colspan="6">Error loading data: ${error.message}</td></tr>`;
+            }
+        }
+        
+        function renderCooperHewittTableView(data) {
+            const container = document.getElementById('ch-table-body');
+            container.innerHTML = "";
+            
+            if (!data.objects) {
+                container.innerHTML = "<tr><td colspan='6'>No data found.</td></tr>";
+                return;
+            }
+            
+            for (const o of data.objects) {
+                const row = document.createElement("tr");
+                const isSelected = chSelectedArtworks.find(a => a.id === o.id);
+                if (isSelected) row.classList.add('selected');
+                
+                let imageCell;
+                if (o.images && o.images.length > 0 && o.images[0].large) {
+                    const img = document.createElement('img');
+                    img.src = o.images[0].large;
+                    img.alt = o.title || 'Untitled';
+                    img.className = 'clickable-image';
+                    img.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:4px;';
+                    imageCell = img.outerHTML;
+                } else {
+                    imageCell = '<span style="color:#999;">No image</span>';
+                }
+                
+                row.innerHTML = `
+                    <td class="checkbox-cell">
+                        <input type="checkbox" ${isSelected ? 'checked' : ''} 
+                               onchange="toggleArtworkSelection(this, '${o.id}', ${JSON.stringify(o).replace(/"/g, '&quot;')})">
+                    </td>
+                    <td class="image-cell">${imageCell}</td>
+                    <td><strong>${o.title || "Untitled"}</strong></td>
+                    <td>${o.display_date || ""}</td>
+                    <td>${o.accession_number || ""}</td>
+                    <td>${o.medium || ""}</td>
+                `;
+                container.appendChild(row);
+            }
+        }
+        
+        function renderCooperHewittDetailedView(data) {
+            // Reuse the detailed view from the original Cooper Hewitt page
+            const container = document.getElementById("ch-detailed-content");
+            container.innerHTML = "";
+            
+            if (!data.objects || data.objects.length === 0) {
+                container.innerHTML = '<p>No objects found.</p>';
+                return;
+            }
+            
+            // Create a simple list view with selection checkboxes
+            for (const o of data.objects) {
+                const isSelected = chSelectedArtworks.find(a => a.id === o.id);
+                const card = document.createElement('div');
+                card.className = 'artwork-card' + (isSelected ? ' selected' : '');
+                
+                const imageHtml = o.images && o.images.length > 0 && o.images[0].large
+                    ? `<img src="${o.images[0].large}" alt="${o.title}" style="max-width: 200px; height: auto; border-radius: 4px;">`
+                    : '<span style="color:#999;">No image</span>';
+                
+                card.innerHTML = `
+                    <div style="background: #2a2a2a; padding: 16px; border-bottom: 1px solid #444; display: flex; align-items: center; gap: 15px;">
+                        <input type="checkbox" ${isSelected ? 'checked' : ''} 
+                               onchange="toggleArtworkSelection(this, '${o.id}', ${JSON.stringify(o).replace(/"/g, '&quot;')})">
+                        <div>
+                            <h3 style="margin: 0; color: #ffffff; font-size: 20px;">${o.title || 'Untitled'}</h3>
+                            <p style="margin: 4px 0 0 0; color: #ccc; font-size: 14px;">${o.display_date || ''} • ${o.accession_number || ''}</p>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 20px; padding: 20px;">
+                        <div>${imageHtml}</div>
+                        <div style="color: white;">
+                            <p><strong>Medium:</strong> ${o.medium || 'Unknown'}</p>
+                            <p><strong>Geography:</strong> ${o.geography?.name || o.geography?.country || 'Unknown'}</p>
+                            <p><strong>Measurements:</strong> ${o.measurements?.dimensions?.join(', ') || 'Unknown'}</p>
+                            <p><strong>Description:</strong> ${o.description && o.description.length > 0 ? o.description.map(d => d.value || d).join(' ').substring(0, 300) + '...' : 'No description available'}</p>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            }
+        }
+        
+        function toggleArtworkSelection(checkbox, artworkId, artworkData) {
+            console.log('toggleArtworkSelection called:', { checkbox, artworkId, artworkData });
+            const row = checkbox.closest('tr') || checkbox.closest('.artwork-card');
+            
+            if (checkbox.checked) {
+                // Add to selected
+                try {
+                    const parsedArtwork = JSON.parse(artworkData.replace(/&quot;/g, '"'));
+                    console.log('Parsed artwork:', parsedArtwork);
+                    
+                    if (!chSelectedArtworks.find(a => a.id === artworkId)) {
+                        chSelectedArtworks.push(parsedArtwork);
+                        console.log('Added to selection. Total selected:', chSelectedArtworks.length);
+                    }
+                } catch (parseError) {
+                    console.error('Error parsing artwork data:', parseError);
+                    console.log('Raw artworkData:', artworkData);
+                }
+                row?.classList.add('selected');
+            } else {
+                // Remove from selected
+                chSelectedArtworks = chSelectedArtworks.filter(a => a.id !== artworkId);
+                console.log('Removed from selection. Total selected:', chSelectedArtworks.length);
+                row?.classList.remove('selected');
+            }
+            
+            // Update import button text
+            const button = document.getElementById('ch-importSelected');
+            button.textContent = `Import Selected (${chSelectedArtworks.length}) to Canvas`;
+            console.log('Updated button text to reflect:', chSelectedArtworks.length, 'selected');
+        }
+        
+        async function importSelectedArtworks() {
+            if (chSelectedArtworks.length === 0) {
+                alert('Please select some artworks to import.');
+                return;
+            }
+            
+            const button = document.getElementById('ch-importSelected');
+            const importCount = chSelectedArtworks.length; // Store count before clearing
+            button.disabled = true;
+            button.textContent = 'Importing...';
+            
+            try {
+                for (const artwork of chSelectedArtworks) {
+                    // Get the best available image URL
+                    let imageUrl = null;
+                    if (artwork.thumbnail) {
+                        imageUrl = artwork.thumbnail;
+                    } else if (artwork.images && artwork.images.length > 0) {
+                        const firstImage = artwork.images[0];
+                        imageUrl = firstImage.large || firstImage.preview || firstImage.original;
+                    }
+                    
+                    if (imageUrl) {
+                        await imageImporter.importCooperHewittImage(artwork, imageUrl);
+                    }
+                }
+                
+                // Log current state for debugging
+                console.log('Import completed, appImages.length:', appImages.length);
+                console.log('Last few images:', appImages.slice(-3));
+                
+                // Update UI and clear selections
+                imageImporter.updateUI();
+                
+                // Uncheck all checkboxes
+                document.querySelectorAll('.cooper-hewitt-browser input[type="checkbox"]').forEach(cb => {
+                    cb.checked = false;
+                    cb.closest('tr')?.classList.remove('selected');
+                    cb.closest('.artwork-card')?.classList.remove('selected');
+                });
+                
+                // Clear selections after successful import
+                chSelectedArtworks = [];
+                
+                // Switch to Local Files tab so user can see imported items
+                showImportMethod('local');
+                
+                alert(`Successfully imported ${importCount} artworks! Check the "Local Files" tab to see them.`);
+            } catch (error) {
+                console.error('Import error:', error);
+                alert('Error importing artworks: ' + error.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Import Selected to Canvas';
+            }
+        }
+        
+        function navigateCooperHewitt(direction) {
+            const newPage = chPage + direction;
+            if (newPage >= 1 && newPage <= chPages) {
+                chPage = newPage;
+                searchCooperHewitt();
+            }
+        }
+        
+        function toggleCooperHewittView() {
+            chIsDetailedView = !chIsDetailedView;
+            const button = document.getElementById('ch-toggleView');
+            const table = document.getElementById('ch-table');
+            const detailedView = document.getElementById('ch-detailed-view');
+            
+            if (chIsDetailedView) {
+                button.textContent = 'Switch to Table View';
+                table.style.display = 'none';
+                detailedView.style.display = 'block';
+            } else {
+                button.textContent = 'Switch to Detailed View';
+                table.style.display = 'table';
+                detailedView.style.display = 'none';
+            }
+            
+            // Re-render current data with new view
+            searchCooperHewitt();
+        }
+        
+        function updateCooperHewittPager(data) {
+            const info = document.getElementById('ch-info');
+            const prevBtn = document.getElementById('ch-prev');
+            const nextBtn = document.getElementById('ch-next');
+            
+            info.textContent = `Page ${chPage} of ${chPages} (${data.total || 0} total)`;
+            prevBtn.disabled = chPage <= 1;
+            nextBtn.disabled = chPage >= chPages;
+        }
     </script>
 </body>
 </html>

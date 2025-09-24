@@ -1,739 +1,3257 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Frederic Edwin Church Objects – Cooper Hewitt</title>
-<style>
-  body { 
-    font:14px system-ui,Segoe UI,Arial;
-    margin:24px; 
-    background: #000000;
-    color: #ffffff;
-  }
-  header { 
-    display:flex;
-    gap:12px;
-    align-items:center;
-    margin-bottom:12px;
-    flex-wrap:wrap;
-    padding: 16px;
-    background: #1a1a1a;
-    border-radius: 8px;
-    border: 1px solid #333;
-  }
-  input,button { 
-    font:14px inherit;
-    padding:6px 10px;
-    background: #2a2a2a;
-    border: 1px solid #444;
-    color: #ffffff;
-    border-radius: 4px;
-  }
-  input::placeholder {
-    color: #999;
-  }
-  button {
-    background: #333;
-    cursor: pointer;
-  }
-  button:hover {
-    background: #444;
-  }
-  table { 
-    border-collapse:collapse;
-    width:100%;
-    margin-top:12px;
-    background: #1a1a1a;
-  }
-  th,td { 
-    border:1px solid #444;
-    padding:8px;
-    text-align:left;
-    vertical-align:top;
-    color: #ffffff;
-  }
-  th { 
-    background:#2a2a2a;
-    position:sticky;
-    top:0; 
-  }
-  th:first-child, td:first-child { width:100px;text-align:center; }
-  td img { border-radius:4px; }
-  .pager { 
-    margin:12px 0;
-    display:flex;
-    gap:8px;
-    align-items:center;
-    color: #ffffff;
-  }
-  .pager button {
-    background: #333;
-    color: #ffffff;
-    border: 1px solid #555;
-  }
-  .pager button:hover {
-    background: #444;
-  }
-  
-  /* Detailed View Styles */
-  .artwork-card { 
-    border: 1px solid #444; 
-    margin-bottom: 24px; 
-    border-radius: 8px; 
-    overflow: hidden;
-    background: #1a1a1a;
-  }
-  .artwork-header { 
-    background: #2a2a2a; 
-    padding: 16px; 
-    border-bottom: 1px solid #444;
-  }
-  .artwork-title { 
-    margin: 0; 
-    color: #ffffff; 
-    font-size: 20px; 
-  }
-  .artwork-subtitle { 
-    margin: 4px 0 0 0; 
-    color: #ccc; 
-    font-size: 14px; 
-  }
-  .artwork-body { 
-    padding: 16px; 
-    display: grid; 
-    grid-template-columns: 300px 1fr; 
-    gap: 20px;
-  }
-  .artwork-image { 
-    text-align: center;
-  }
-  .artwork-image img { 
-    max-width: 100%; 
-    max-height: 300px; 
-    border-radius: 4px; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-  .artwork-details { min-height: 1px; }
-  .detail-section { 
-    margin-bottom: 16px; 
-  }
-  .detail-label { 
-    font-weight: bold; 
-    color: #ffffff; 
-    margin-bottom: 4px;
-  }
-  .detail-value { 
-    margin-bottom: 8px; 
-    line-height: 1.4;
-    color: #ccc;
-  }
-  .tag-list { 
-    display: flex; 
-    flex-wrap: wrap; 
-    gap: 4px;
-  }
-  .tag { 
-    background: #444; 
-    padding: 2px 8px; 
-    border-radius: 12px; 
-    font-size: 12px; 
-    color: #ffffff;
-  }
-  .link-button { 
-    display: inline-block; 
-    background: #555; 
-    color: #ffffff; 
-    padding: 8px 16px; 
-    text-decoration: none; 
-    border-radius: 4px; 
-    font-size: 14px;
-    border: 1px solid #666;
-  }
-  .link-button:hover { 
-    background: #666; 
-  }
-  
-  /* Spreadsheet View Styles */
-  .spreadsheet-view {
-    margin: 20px 0;
-    overflow-x: auto;
-    background: #1a1a1a;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(255,255,255,0.1);
-    border: 1px solid #333;
-  }
-
-  .spreadsheet-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    line-height: 1.4;
-    min-width: 1400px; /* Ensure horizontal scrolling for many columns */
-    background: #1a1a1a;
-  }
-
-  .spreadsheet-table th {
-    background: linear-gradient(135deg, #333 0%, #444 100%);
-    color: #ffffff;
-    padding: 12px 8px;
-    text-align: left;
-    font-weight: 600;
-    border-right: 1px solid #555;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    white-space: nowrap;
-    font-size: 12px;
-  }
-
-  .spreadsheet-table th:last-child {
-    border-right: none;
-  }
-
-  .spreadsheet-table td {
-    padding: 8px;
-    border-bottom: 1px solid #333;
-    border-right: 1px solid #2a2a2a;
-    vertical-align: top;
-    max-width: 200px;
-    overflow: hidden;
-    color: #ffffff;
-    background: #1a1a1a;
-  }
-
-  .spreadsheet-table td:last-child {
-    border-right: none;
-  }
-
-  .spreadsheet-table tr:nth-child(even) td {
-    background-color: #222;
-  }
-
-  .spreadsheet-table tr:hover td {
-    background-color: #2a2a2a !important;
-  }
-
-  /* Specific column styling */
-  .image-cell {
-    text-align: center;
-    width: 80px;
-    min-width: 80px;
-    max-width: 80px;
-  }
-
-  .title-cell {
-    min-width: 200px;
-    font-weight: 600;
-  }
-
-  .description-cell, .exhibitions-cell, .provenance-cell {
-    max-width: 300px;
-    word-wrap: break-word;
-    font-size: 12px;
-    line-height: 1.3;
-  }
-
-  .description-text {
-    position: relative;
-  }
-
-  .description-text.collapsed {
-    max-height: 4.8em; /* ~4 lines at 1.2em line height */
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    line-clamp: 4;
-    -webkit-box-orient: vertical;
-  }
-
-  .description-expand-btn {
-    color: #007acc;
-    cursor: pointer;
-    font-weight: 500;
-    text-decoration: underline;
-    font-size: 11px;
-    margin-top: 2px;
-    display: inline-block;
-  }
-
-  .description-expand-btn:hover {
-    color: #005a99;
-  }
-
-  .legal-cell, .identifiers-cell {
-    max-width: 250px;
-    font-size: 12px;
-  }
-
-  .link-cell {
-    text-align: center;
-    width: 60px;
-    min-width: 60px;
-  }
-
-  .spreadsheet-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px;
-  }
-
-  .spreadsheet-tag {
-    background: #555;
-    color: #ffffff;
-    padding: 2px 6px;
-    border-radius: 12px;
-    font-size: 10px;
-    font-weight: 500;
-    white-space: nowrap;
-    display: inline-block;
-  }
-
-  .spreadsheet-link {
-    color: #66b3ff;
-    text-decoration: none;
-    font-weight: 500;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    background: #2a2a2a;
-    display: inline-block;
-    border: 1px solid #444;
-  }
-
-  .spreadsheet-link:hover {
-    background: #555;
-    color: #ffffff;
-    text-decoration: none;
-  }
-
-  .spreadsheet-image {
-    border-radius: 4px;
-    border: 1px solid #ddd;
-  }
-
-  /* Image Modal Styles */
-  .image-modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(3px);
-  }
-
-  .image-modal.show {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .image-modal-content {
-    position: relative;
-    max-width: 90vw;
-    max-height: 90vh;
-    background: #1a1a1a;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
-    overflow: hidden;
-    border: 1px solid #444;
-  }
-
-  .image-modal img {
-    display: block;
-    max-width: 100%;
-    max-height: 85vh;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-  }
-
-  .image-modal-close {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.7);
-    border: none;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1001;
-  }
-
-  .image-modal-close:hover {
-    background: rgba(0, 0, 0, 0.9);
-  }
-
-  .image-modal-info {
-    padding: 15px 20px;
-    background: #1a1a1a;
-    border-top: 1px solid #444;
-  }
-
-  .image-modal-title {
-    font-weight: 600;
-    font-size: 16px;
-    color: #ffffff;
-    margin-bottom: 5px;
-  }
-
-  .image-modal-meta {
-    font-size: 12px;
-    color: #ccc;
-    line-height: 1.4;
-  }
-
-  .clickable-image {
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-  }
-
-  .clickable-image:hover {
-    opacity: 0.8;
-  }
-  
-  @media (max-width: 768px) {
-    .artwork-body { 
-      grid-template-columns: 1fr; 
-    }
-    .spreadsheet-table th {
-      min-width: 100px;
-      width: 120px;
-    }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art History Canvas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f8f8;
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Navigation */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #666;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .nav-bar h1 {
+            color: white;
+            font-size: 20px;
+            margin-right: 30px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .nav-tab {
+            background: #888;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        
+        .nav-tab:hover {
+            background: #777;
+        }
+        
+        .nav-tab.active {
+            background: #ddd;
+            color: #333;
+        }
+        
+        .page {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+        }
+        
+        .page.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Import Page Styles */
+        .import-page {
+            background: #f8f8f8;
+        }
+        
+        /* Cooper Hewitt Browser Styles */
+        .cooper-hewitt-browser {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            width: 100%;
+            max-width: none;
+        }
+        
+        .browser-header {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            padding: 12px;
+            background: #1a1a1a;
+            border-radius: 6px;
+            border: 1px solid #333;
+        }
+        
+        .browser-header h2 {
+            font-size: 18px;
+            margin: 0;
+            color: white;
+        }
+        
+        .browser-pager {
+            margin: 8px 0;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            color: #333;
+        }
+        
+        .cooper-hewitt-browser table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 8px;
+            background: #1a1a1a;
+            table-layout: auto;
+        }
+        
+        .cooper-hewitt-browser th,
+        .cooper-hewitt-browser td {
+            border: 1px solid #444;
+            padding: 6px 8px;
+            text-align: left;
+            vertical-align: top;
+            color: #ffffff;
+            font-size: 13px;
+        }
+        
+        .cooper-hewitt-browser th {
+            background: #2a2a2a;
+            position: sticky;
+            top: 0;
+            font-weight: 600;
+        }
+        
+        .cooper-hewitt-browser td img {
+            border-radius: 4px;
+        }
+        
+        .cooper-hewitt-browser .clickable-image {
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+        
+        .cooper-hewitt-browser .clickable-image:hover {
+            opacity: 0.8;
+        }
+        
+        .cooper-hewitt-browser .checkbox-cell {
+            text-align: center;
+            width: 40px;
+        }
+        
+        .cooper-hewitt-browser .image-cell {
+            text-align: center;
+            width: 100px;
+        }
+        
+        /* Selected artwork highlighting */
+        .cooper-hewitt-browser tr.selected {
+            background-color: #2a4a2a !important;
+        }
+        
+        .cooper-hewitt-browser tr.selected td {
+            background-color: #2a4a2a !important;
+        }
+        
+        /* Detailed view styles */
+        .cooper-hewitt-browser .artwork-card {
+            border: 1px solid #444;
+            margin-bottom: 16px;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #1a1a1a;
+            width: 100%;
+        }
+        
+        .cooper-hewitt-browser .artwork-card.selected {
+            border-color: #4CAF50;
+            background: #1a2a1a;
+        }
+        
+        /* Button styles within Cooper Hewitt browser */
+        .cooper-hewitt-browser button {
+            font: 14px inherit;
+            padding: 6px 10px;
+            background: #333;
+            border: 1px solid #444;
+            color: #ffffff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .cooper-hewitt-browser button:hover {
+            background: #444;
+        }
+        
+        .cooper-hewitt-browser button:disabled {
+            background: #555;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .cooper-hewitt-browser input[type="text"], 
+        .cooper-hewitt-browser input[type="number"] {
+            font: 14px inherit;
+            padding: 6px 10px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: #ffffff;
+            border-radius: 4px;
+        }
+        
+        .cooper-hewitt-browser input::placeholder {
+            color: #999;
+        }
+        
+        #ch-importSelected {
+            background: #4CAF50 !important;
+            border: 1px solid #45a049 !important;
+        }
+        
+        #ch-importSelected:hover {
+            background: #45a049 !important;
+        }
+        
+        .import-header {
+            background: #ddd;
+            padding: 15px;
+            text-align: center;
+            color: #555;
+        }
+        
+        .import-header h2 {
+            margin-bottom: 8px;
+        }
+        
+        /* Import Method Tabs */
+        .import-tabs {
+            display: flex;
+            background: #ccc;
+            border-bottom: 1px solid #bbb;
+        }
+        
+        .import-tab {
+            background: transparent;
+            border: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .import-tab:hover {
+            background: #ddd;
+            color: #333;
+        }
+        
+        .import-tab.active {
+            color: #333;
+            border-bottom-color: #007ACC;
+            background: #eee;
+        }
+        
+        .import-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f8f8f8;
+        }
+        
+        .import-method {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+            min-height: 0;
+        }
+        
+        .import-method.active {
+            display: flex;
+        }
+        
+        .drop-zone {
+            background: #e8e8e8;
+            border: 3px dashed #999;
+            margin: 20px;
+            padding: 40px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .drop-zone.dragover {
+            background: #d5d5d5;
+            border-color: #555;
+            transform: scale(1.02);
+        }
+        
+        .drop-zone.has-files {
+            min-height: 80px;
+            padding: 20px;
+        }
+        
+        .drop-zone-icon {
+            font-size: 48px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+        
+        .drop-zone h2 {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .drop-zone p {
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .metadata-editor {
+            flex: 1;
+            margin: 0 20px 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+            min-height: 0;
+        }
+        
+        .metadata-editor.visible {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .editor-header {
+            background: #ddd;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        .editor-header h3 {
+            color: #555;
+            font-size: 16px;
+        }
+        
+        .table-container {
+            flex: 1;
+            overflow: auto;
+            min-height: 200px;
+            max-height: calc(100vh - 400px);
+        }
+        
+        .metadata-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        .metadata-table th {
+            background: #f0f0f0;
+            padding: 12px 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .metadata-table td {
+            padding: 8px;
+            border: 1px solid #eee;
+            vertical-align: top;
+        }
+        
+        .metadata-table tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .image-preview {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        .metadata-table input, .metadata-table textarea {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 4px;
+            font-size: 14px;
+            resize: none;
+        }
+        
+        .metadata-table input:focus, .metadata-table textarea:focus {
+            outline: 2px solid #888;
+            outline-offset: -2px;
+            background: white;
+        }
+        
+        .metadata-table textarea {
+            min-height: 60px;
+        }
+        
+        .filename-cell {
+            font-weight: 500;
+            color: #666;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .delete-btn {
+            background: #999;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .delete-btn:hover {
+            background: #777;
+        }
+        
+        .import-bottom-bar {
+            background: #ddd;
+            padding: 20px;
+            border-top: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .file-count {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .btn-secondary {
+            background: #999;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #777;
+        }
+        
+        .btn-primary {
+            background: #666;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #555;
+        }
+        
+        .btn-danger {
+            background: #888;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #666;
+        }
+        
+        /* Canvas Page Styles */
+        .canvas-page {
+            background: #ecf0f1;
+        }
+        
+        .canvas-toolbar {
+            background: #666;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            height: 50px;
+            gap: 10px;
+            justify-content: space-between;
+        }
+        
+        .canvas-toolbar .toolbar-left,
+        .canvas-toolbar .toolbar-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .canvas-toolbar button {
+            background: #888;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        
+        .canvas-toolbar button:hover {
+            background: #777;
+        }
+        
+        .canvas-toolbar button.active {
+            background: #ddd;
+            color: #333;
+        }
+        
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #555;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        
+        .zoom-btn {
+            width: 30px;
+            height: 30px;
+            padding: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .zoom-level {
+            color: white;
+            font-size: 12px;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #canvas {
+            cursor: grab;
+            background: linear-gradient(45deg, #ecf0f1 25%, transparent 25%), 
+                        linear-gradient(-45deg, #ecf0f1 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #ecf0f1 75%), 
+                        linear-gradient(-45deg, transparent 75%, #ecf0f1 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        
+        #canvas.dragging {
+            cursor: grabbing;
+        }
+        
+        #canvas.panning {
+            cursor: move;
+        }
+        
+        .image-item {
+            position: absolute;
+            border: 3px solid #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: grab;
+            transition: transform 0.1s ease-out;
+            user-select: none;
+        }
+        
+        .image-item:hover {
+            transform: scale(1.05);
+            z-index: 100;
+        }
+        
+        .image-item.dragging {
+            cursor: grabbing;
+            transform: scale(1.1) rotate(2deg);
+            z-index: 1000;
+        }
+        
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        .metadata-tooltip {
+            position: absolute;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 2000;
+            max-width: 200px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .modal.visible {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+        }
+        
+        .modal-header h3 {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .modal-header p {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+        
+        .status-message {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .auto-fill-controls {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .auto-fill-controls h4 {
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 14px;
+        }
+        
+        .auto-fill-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .auto-fill-row input {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+        
+        .auto-fill-btn {
+            padding: 6px 12px;
+            background: #999;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .auto-fill-btn:hover {
+            background: #777;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #eee;
+            margin-top: 10px;
+            border-radius: 2px;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #666;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .empty-canvas {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #999;
+            text-align: center;
+        }
+        
+        .empty-canvas-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .empty-canvas h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .empty-canvas p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        /* Image Detail Modal */
+        .image-detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            padding: 20px;
+        }
+        
+        .image-detail-modal.visible {
+            display: flex;
+        }
+        
+        .image-detail-content {
+            background: white;
+            border-radius: 8px;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        
+        .image-detail-image {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f8f8f8;
+            min-width: 400px;
+            min-height: 400px;
+        }
+        
+        .image-detail-image img {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+        
+        .image-detail-info {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .image-detail-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .image-detail-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .image-detail-filename {
+            font-size: 14px;
+            color: #888;
+            font-style: italic;
+        }
+        
+        .image-detail-metadata {
+            flex: 1;
+        }
+        
+        .metadata-item {
+            margin-bottom: 15px;
+        }
+        
+        .metadata-label {
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+        
+        .metadata-value {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+        
+        .metadata-value.empty {
+            color: #999;
+            font-style: italic;
+        }
+        
+        .image-detail-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .image-detail-close:hover {
+            background: rgba(0,0,0,0.9);
+        }
+    </style>
 </head>
 <body>
-
-<!-- Image Modal -->
-<div id="imageModal" class="image-modal">
-  <div class="image-modal-content">
-    <button class="image-modal-close" onclick="closeImageModal()">&times;</button>
-    <img id="modalImage" src="" alt="">
-    <div class="image-modal-info">
-      <div class="image-modal-title" id="modalTitle"></div>
-      <div class="image-modal-meta" id="modalMeta"></div>
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <h1>Art History Canvas</h1>
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showPage('import')">Import Images</button>
+            <button class="nav-tab" onclick="showPage('canvas')">Canvas</button>
+        </div>
     </div>
-  </div>
-</div>
-
-<header>
-  <h1 style="margin:0">Frederic E. Church @ Cooper Hewitt</h1>
-  <label>Query <input id="q" placeholder="optional keyword"></label>
-  <label>Per page <input id="pp" type="number" value="50" min="1" max="500"></label>
-  <button id="go">Search</button>
-  <button id="toggleView">Switch to Detailed View</button>
-</header>
-
-<div class="pager">
-  <button id="prev">Prev</button>
-  <span id="info"></span>
-  <button id="next">Next</button>
-</div>
-
-<!-- Table View -->
-<table id="t" style="display:table">
-  <thead>
-    <tr><th>Thumbnail</th><th>Title</th><th>Date</th><th>Accession</th><th>Medium</th><th>Link</th></tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<!-- Detailed View -->
-<div id="detailed-view" style="display:none">
-  <div id="detailed-content"></div>
-</div>
-
-<script>
-let page = 1, pages = 1, isDetailedView = false;
-
-function renderTableView(data) {
-  const container = document.querySelector("#t tbody");
-  container.innerHTML = "";
-  
-  if (!data.objects) {
-    container.innerHTML = "<tr><td colspan='6'>No data found.</td></tr>";
-    return;
-  }
-  
-  for (const o of data.objects) {
-    const row = document.createElement("tr");
     
-    let imageCell;
-    if (o.images && o.images.length > 0 && o.images[0].large) {
-      const img = document.createElement('img');
-      img.src = o.images[0].large;
-      img.alt = o.title || 'Untitled';
-      img.className = 'clickable-image';
-      img.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:4px;';
-      img.onclick = () => openImageModal(
-        o.images[0].original || o.images[0].large,
-        o.title || 'Untitled',
-        o.display_date || '',
-        o.accession_number || '',
-        o.medium || ''
-      );
-      imageCell = img.outerHTML;
-    } else {
-      imageCell = '<span style="color:#999;">No image</span>';
-    }
-    
-    row.innerHTML = `
-      <td>${imageCell}</td>
-      <td><strong>${o.title || "Untitled"}</strong></td>
-      <td>${o.display_date || ""}</td>
-      <td>${o.accession_number || ""}</td>
-      <td>${o.medium || ""}</td>
-      <td><a href="${o.url}" target="_blank" rel="noopener">View</a></td>
-    `;
-    container.appendChild(row);
-  }
-}
-
-function renderDetailedView(data) {
-  const container = document.getElementById("detailed-content");
-  container.innerHTML = "";
-  
-  if (!data.objects || data.objects.length === 0) {
-    container.innerHTML = '<p>No objects found.</p>';
-    return;
-  }
-  
-  // Create the main spreadsheet table
-  const table = document.createElement('table');
-  table.className = 'spreadsheet-table';
-  
-  // Create header row
-  const headerRow = document.createElement('tr');
-  headerRow.innerHTML = `
-    <th>Image</th>
-    <th>Title</th>
-    <th>Date</th>
-    <th>Accession Number</th>
-    <th>Object Type</th>
-    <th>Medium & Materials</th>
-    <th>Measurements</th>
-    <th>Geography</th>
-    <th>Cultural Context</th>
-    <th>Period</th>
-    <th>Classification</th>
-    <th>Department</th>
-    <th>Status</th>
-    <th>Location</th>
-    <th>Exhibitions</th>
-    <th>Provenance</th>
-    <th>Legal & Rights</th>
-    <th>Description</th>
-    <th>Identifiers</th>
-    <th>Link</th>
-  `;
-  table.appendChild(headerRow);
-  
-  // Create data rows
-  for (const o of data.objects) {
-    const row = document.createElement('tr');
-    
-    // Helper functions for data formatting
-    const formatArray = (arr, tagClass = '') => {
-      if (!arr || arr.length === 0) return '';
-      if (tagClass) {
-        return `<div class="spreadsheet-tags">${arr.map(item => `<span class="spreadsheet-tag">${item}</span>`).join('')}</div>`;
-      }
-      return arr.join(', ');
-    };
-    
-    const formatExhibitions = (exhibitions) => {
-      if (!exhibitions || exhibitions.length === 0) return '';
-      return exhibitions.map(ex => `"${ex.title}" (${ex.date || 'Date unknown'})`).join('; ');
-    };
-    
-    const formatIdentifiers = (identifiers) => {
-      if (!identifiers || identifiers.length === 0) return '';
-      return identifiers.map(id => `${id.type}: ${id.value}`).join('; ');
-    };
-    
-    const formatLegal = (legal) => {
-      if (!legal) return '';
-      const parts = [];
-      if (legal.credit) parts.push(`Credit: ${legal.credit}`);
-      if (legal.rights) parts.push(`Rights: ${legal.rights}`);
-      return parts.join('; ');
-    };
-    
-    const formatDescription = (description) => {
-      if (!description || description.length === 0) return '';
-      const fullText = description.map(d => d.value || d).join(' ');
-      if (fullText.length <= 200) {
-        return fullText; // Short descriptions don't need collapsing
-      }
-      
-      const id = 'desc-' + Math.random().toString(36).substr(2, 9);
-      return `
-        <div class="description-text collapsed" id="${id}">
-          ${fullText}
+    <!-- Import Page -->
+    <div class="page active" id="import-page">
+        <div class="import-header">
+            <h2>Import & Organize Your Art Images</h2>
+            <p>Choose your import method below</p>
         </div>
-        <div class="description-expand-btn" onclick="toggleDescription('${id}')">
-          Show more...
+        
+        <!-- Import Method Tabs -->
+        <div class="import-tabs">
+            <button class="import-tab active" onclick="showImportMethod('local')">Local Files</button>
+            <button class="import-tab" onclick="showImportMethod('sheets')">Google Sheets</button>
+            <button class="import-tab" onclick="showImportMethod('cooper-hewitt')">Cooper Hewitt Collection</button>
         </div>
-      `;
-    };
+        
+        <div class="import-content">
+            <!-- Local Files Import -->
+            <div class="import-method active" id="import-local">
+                <div class="drop-zone" id="dropZone">
+                    <div class="drop-zone-icon">📁</div>
+                    <h2>Drop images here</h2>
+                    <p>Or click to browse files • Supports JPG, PNG, GIF, WebP</p>
+                    <input type="file" id="fileInput" class="file-input" multiple accept="image/*">
+                </div>
+                
+                <div class="metadata-editor" id="metadataEditor">
+                    <div class="editor-header">
+                        <h3>Image Metadata</h3>
+                        <div class="auto-fill-controls">
+                            <h4>Quick Fill Options</h4>
+                            <div class="auto-fill-row">
+                                <input type="text" id="bulkCreator" placeholder="Artist/Creator">
+                                <button class="auto-fill-btn" onclick="autofillColumn('creator')">Fill All</button>
+                            </div>
+                            <div class="auto-fill-row">
+                                <input type="text" id="bulkLocation" placeholder="Location">
+                                <button class="auto-fill-btn" onclick="autofillColumn('location')">Fill All</button>
+                            </div>
+                            <div class="auto-fill-row">
+                                <input type="number" id="bulkYear" placeholder="Year">
+                                <button class="auto-fill-btn" onclick="autofillColumn('year')">Fill All</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="metadata-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Preview</th>
+                                    <th style="width: 150px;">Filename</th>
+                                    <th style="width: 200px;">Title</th>
+                                    <th style="width: 150px;">Creator/Artist</th>
+                                    <th style="width: 100px;">Year</th>
+                                    <th style="width: 150px;">Location</th>
+                                    <th style="width: 250px;">Description</th>
+                                    <th style="width: 100px;">Subject/Tags</th>
+                                    <th style="width: 60px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="imageTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="import-bottom-bar">
+                    <div class="file-count" id="fileCount">No images loaded</div>
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-danger" onclick="clearAllImages()">Clear All</button>
+                        <button class="btn btn-secondary" onclick="exportToCSV()">Export CSV</button>
+                        <button class="btn btn-primary" onclick="goToCanvas()">Go to Canvas</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Google Sheets Import -->
+            <div class="import-method" id="import-sheets">
+                <div class="import-info" style="text-align: center; padding: 40px;">
+                    <h3>Import from Google Sheets</h3>
+                    <p>Import metadata and images from a Google Sheets document. Include columns for filename, title, creator, year, location, description, subject, and image_url (for direct image import).</p>
+                    <br>
+                    <button class="btn btn-primary" onclick="showGoogleSheetsModal()">Configure Google Sheets Import</button>
+                </div>
+            </div>
+            
+            <!-- Cooper Hewitt Import -->
+            <div class="import-method" id="import-cooper-hewitt">
+                <div class="cooper-hewitt-browser">
+                    <div class="browser-header">
+                        <h3 style="color: white; margin-bottom: 10px;">Browse Cooper Hewitt Collection</h3>
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <label style="color: white; font-size: 14px;">Query 
+                                <input id="ch-q" placeholder="optional keyword" style="width: 120px; margin-left: 5px;">
+                            </label>
+                            <label style="color: white; font-size: 14px;">Per page 
+                                <input id="ch-pp" type="number" value="20" min="1" max="100" style="width: 60px; margin-left: 5px;">
+                            </label>
+                            <button id="ch-go">Search</button>
+                            <button id="ch-toggleView">Detailed View</button>
+                        </div>
+                    </div>
+
+                    <div class="browser-pager">
+                        <button id="ch-prev">Prev</button>
+                        <span id="ch-info"></span>
+                        <button id="ch-next">Next</button>
+                        <button id="ch-selectAll" style="margin-left: 20px;">Select All</button>
+                        <button id="ch-selectNone">Select None</button>
+                        <button id="ch-importSelected" class="btn btn-primary" style="margin-left: 20px;">Import Selected to Canvas</button>
+                    </div>
+
+                    <!-- Table View -->
+                    <div style="max-height: 500px; overflow-y: auto; border: 1px solid #444; border-radius: 4px;">
+                        <table id="ch-table">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-cell">Select</th>
+                                    <th class="image-cell">Thumbnail</th>
+                                    <th>Title</th>
+                                    <th>Date</th>
+                                    <th>Accession</th>
+                                    <th>Medium</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ch-table-body"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Detailed View -->
+                    <div id="ch-detailed-view" style="display: none; max-height: 500px; overflow-y: auto; border: 1px solid #444; border-radius: 4px; padding: 15px; background: #1a1a1a;">
+                        <div id="ch-detailed-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
-    const imageHtml = o.images && o.images.length > 0 && o.images[0].large
-      ? `<img src="${o.images[0].large}" alt="${o.title}" class="spreadsheet-image clickable-image" 
-           onclick="openImageModal('${(o.images[0].original || o.images[0].large).replace(/'/g, '&quot;')}', 
-                                   '${(o.title || 'Untitled').replace(/'/g, '&quot;')}', 
-                                   '${(o.display_date || '').replace(/'/g, '&quot;')}', 
-                                   '${(o.accession_number || '').replace(/'/g, '&quot;')}', 
-                                   '${(o.medium || '').replace(/'/g, '&quot;')}')"
-           style="width:60px;height:60px;object-fit:cover;" />`
-      : '<span style="color:#999;font-size:12px;">No image</span>';
+    <!-- Canvas Page -->
+    <div class="page" id="canvas-page">
+        <div class="canvas-toolbar">
+            <div class="toolbar-left">
+                <button onclick="sortByTime()">Sort by Time</button>
+                <button onclick="sortByGeography()">Sort by Geography</button>
+                <button onclick="sortByCreator()">Sort by Creator</button>
+                <button onclick="sortByMedium()">Sort by Medium</button>
+                <button onclick="resetPhysics()">Reset Physics</button>
+            </div>
+            <div class="toolbar-right">
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomOut()">−</button>
+                    <div class="zoom-level" id="zoomLevel">100%</div>
+                    <button class="zoom-btn" onclick="zoomIn()">+</button>
+                </div>
+                <button onclick="resetView()">Reset View</button>
+                <button onclick="saveArrangement()">Save Layout</button>
+                <button onclick="loadArrangement()">Load Layout</button>
+            </div>
+        </div>
+        
+        <div class="canvas-container">
+            <canvas id="canvas"></canvas>
+            <div class="empty-canvas" id="emptyCanvas">
+                <div class="empty-canvas-icon">🎨</div>
+                <h3>No Images Yet</h3>
+                <p>Import some images first to start arranging them on the canvas</p>
+                <button class="btn btn-primary" onclick="showPage('import')">Import Images</button>
+            </div>
+        </div>
+    </div>
     
-    row.innerHTML = `
-      <td class="image-cell">${imageHtml}</td>
-      <td class="title-cell"><strong>${o.title || 'Untitled'}</strong></td>
-      <td>${o.display_date || ''}</td>
-      <td>${o.accession_number || ''}</td>
-      <td>${formatArray(o.name, 'tag')}</td>
-      <td>${o.medium || ''}</td>
-      <td>${o.measurements && o.measurements.dimensions ? o.measurements.dimensions.join('; ') : ''}</td>
-      <td>${o.geography ? (o.geography.name || o.geography.country || '') : ''}</td>
-      <td>${formatArray(o.culture, 'tag')}</td>
-      <td>${formatArray(o.period, 'tag')}</td>
-      <td>${formatArray(o.classification, 'tag')}</td>
-      <td>${formatArray(o.department)}</td>
-      <td>${o.status || ''}</td>
-      <td>${o.location || ''}</td>
-      <td class="exhibitions-cell">${formatExhibitions(o.exhibitions)}</td>
-      <td class="provenance-cell">${o.provenance ? o.provenance.join('; ') : ''}</td>
-      <td class="legal-cell">${formatLegal(o.legal)}</td>
-      <td class="description-cell">${formatDescription(o.description)}</td>
-      <td class="identifiers-cell">${formatIdentifiers(o.identifiers)}</td>
-      <td class="link-cell"><a href="${o.url}" target="_blank" rel="noopener" class="spreadsheet-link">View</a></td>
-    `;
+    <div class="metadata-tooltip" id="tooltip"></div>
     
-    table.appendChild(row);
-  }
-  
-  // Add table to container with wrapper for horizontal scrolling
-  const wrapper = document.createElement('div');
-  wrapper.className = 'spreadsheet-view';
-  wrapper.style.overflowX = 'auto';
-  wrapper.appendChild(table);
-  container.appendChild(wrapper);
-}
+    <!-- Image Detail Modal -->
+    <div class="image-detail-modal" id="imageDetailModal">
+        <div class="image-detail-content">
+            <div class="image-detail-image">
+                <img id="detailImage" src="" alt="">
+            </div>
+            <div class="image-detail-info">
+                <div class="image-detail-header">
+                    <div class="image-detail-title" id="detailTitle">Title</div>
+                    <div class="image-detail-filename" id="detailFilename">filename.jpg</div>
+                </div>
+                <div class="image-detail-metadata">
+                    <div class="metadata-item">
+                        <div class="metadata-label">Creator/Artist</div>
+                        <div class="metadata-value" id="detailCreator">Unknown</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Year</div>
+                        <div class="metadata-value" id="detailYear">Unknown</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Location</div>
+                        <div class="metadata-value" id="detailLocation">Unknown</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Subject/Tags</div>
+                        <div class="metadata-value" id="detailSubject">None</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Description</div>
+                        <div class="metadata-value" id="detailDescription">No description available</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="image-detail-close" onclick="closeImageDetail()">×</button>
+    </div>
+    
+    <!-- Google Sheets Import Modal -->
+    <div class="modal" id="googleSheetsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Import from Google Sheets</h3>
+                <p>Import metadata and images from a Google Sheets document. Include columns for filename, title, creator, year, location, description, subject, and image_url (for direct image import). Make sure your sheet is publicly accessible or provide an API key.</p>
+            </div>
+            
+            <div class="status-message" id="statusMessage"></div>
+            
+            <div class="form-group">
+                <label for="sheetsUrl">Google Sheets URL or Sheet ID:</label>
+                <input type="text" id="sheetsUrl" placeholder="https://docs.google.com/spreadsheets/d/your-sheet-id/edit#gid=0">
+            </div>
+            
+            <div class="form-group">
+                <label for="sheetRange">Sheet Range (optional):</label>
+                <input type="text" id="sheetRange" placeholder="Sheet1!A1:I100" value="Sheet1!A:I">
+            </div>
+            
+            <div class="form-group">
+                <label for="apiKey">Google Sheets API Key (optional):</label>
+                <input type="text" id="apiKey" placeholder="Your API key for private sheets">
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="importImages" checked> 
+                    Import images from URLs/Google Drive links in the sheet
+                </label>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="hideGoogleSheetsModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="importFromGoogleSheets()">Import Data</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cooper Hewitt Import Modal -->
+    <div class="modal" id="cooperHewittModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Import from Cooper Hewitt</h3>
+                <p>Import Frederic Edwin Church artworks from the Cooper Hewitt Smithsonian Design Museum. You can search by keywords or import all available works.</p>
+                <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                    <strong>Requirements:</strong> Connected to Firebase Functions for live Cooper Hewitt data. 
+                    In terminal, run: <code>cd /Users/markleyboyer/church-proxy && node server.js</code>
+                </p>
+            </div>
+            
+            <div class="status-message" id="cooperHewittStatusMessage"></div>
+            
+            <div class="form-group">
+                <label for="cooperHewittQuery">Search Query (optional):</label>
+                <input type="text" id="cooperHewittQuery" placeholder="Enter keywords to search for specific works">
+            </div>
+            
+            <div class="form-group">
+                <button class="btn btn-secondary" onclick="testServerConnection()" style="width: 100%; margin-bottom: 10px;">
+                    Test Server Connection
+                </button>
+            </div>
+            
+            <div class="form-group">
+                <label for="cooperHewittLimit">Number of Images to Import:</label>
+                <input type="number" id="cooperHewittLimit" value="50" min="1" max="500" placeholder="50">
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="cooperHewittOnlyWithImages" checked> 
+                    Only import artworks that have images
+                </label>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="hideCooperHewittModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="importFromCooperHewitt()">Import Artworks</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Global application state
+        let appImages = [];
+        let currentPage = 'import';
+        let canvasApp = null;
+        
+        // Page navigation
+        function showPage(pageName) {
+            // Update active tab
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelector(`[onclick="showPage('${pageName}')"]`).classList.add('active');
+            
+            // Update active page
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(`${pageName}-page`).classList.add('active');
+            
+            currentPage = pageName;
+            
+            // Initialize canvas if switching to canvas page
+            if (pageName === 'canvas') {
+                if (!canvasApp) {
+                    canvasApp = new ArtCanvas();
+                }
+                canvasApp.loadImagesFromImporter(appImages);
+                canvasApp.resizeCanvas();
+                updateCanvasVisibility();
+            }
+        }
+        
+        // Import method navigation
+        function showImportMethod(methodName) {
+            // Update active tab
+            document.querySelectorAll('.import-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelector(`[onclick="showImportMethod('${methodName}')"]`).classList.add('active');
+            
+            // Update active method
+            document.querySelectorAll('.import-method').forEach(method => method.classList.remove('active'));
+            document.getElementById(`import-${methodName}`).classList.add('active');
+        }
 
-function toggleDescription(id) {
-  const element = document.getElementById(id);
-  const button = element.nextElementSibling;
-  
-  if (element.classList.contains('collapsed')) {
-    element.classList.remove('collapsed');
-    button.textContent = 'Show less...';
-  } else {
-    element.classList.add('collapsed');
-    button.textContent = 'Show more...';
-  }
-}
+        function updateCanvasVisibility() {
+            const emptyCanvas = document.getElementById('emptyCanvas');
+            const canvas = document.getElementById('canvas');
+            
+            if (appImages.length === 0) {
+                emptyCanvas.style.display = 'flex';
+                canvas.style.display = 'none';
+            } else {
+                emptyCanvas.style.display = 'none';
+                canvas.style.display = 'block';
+            }
+        }
+        
+        function goToCanvas() {
+            if (appImages.length === 0) {
+                alert('Please import some images first!');
+                return;
+            }
+            showPage('canvas');
+        }
+        
+        // Image Import System
+        class ImageImporter {
+            constructor() {
+                this.setupEventListeners();
+                this.updateUI();
+            }
+            
+            setupEventListeners() {
+                const dropZone = document.getElementById('dropZone');
+                const fileInput = document.getElementById('fileInput');
+                
+                dropZone.addEventListener('click', () => fileInput.click());
+                
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('dragover');
+                });
+                
+                dropZone.addEventListener('dragleave', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('dragover');
+                });
+                
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('dragover');
+                    this.handleFiles(e.dataTransfer.files);
+                });
+                
+                fileInput.addEventListener('change', (e) => {
+                    this.handleFiles(e.target.files);
+                });
+            }
+            
+            async handleFiles(files) {
+                const validFiles = Array.from(files).filter(file => 
+                    file.type.startsWith('image/')
+                );
+                
+                if (validFiles.length === 0) {
+                    alert('Please select valid image files.');
+                    return;
+                }
+                
+                for (let i = 0; i < validFiles.length; i++) {
+                    await this.processFile(validFiles[i]);
+                }
+                
+                this.updateUI();
+            }
+            
+            processFile(file) {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const imageData = {
+                            id: Date.now() + Math.random(),
+                            file: file,
+                            filename: file.name,
+                            preview: e.target.result,
+                            metadata: {
+                                title: this.extractTitleFromFilename(file.name),
+                                creator: '',
+                                year: '',
+                                location: '',
+                                description: '',
+                                subject: ''
+                            }
+                        };
+                        appImages.push(imageData);
+                        resolve();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+            
+            extractTitleFromFilename(filename) {
+                return filename
+                    .replace(/\.[^/.]+$/, '')
+                    .replace(/[_-]/g, ' ')
+                    .replace(/\b\w/g, l => l.toUpperCase());
+            }
+            
+            updateUI() {
+                console.log('updateUI called, appImages.length:', appImages.length);
+                const dropZone = document.getElementById('dropZone');
+                const editor = document.getElementById('metadataEditor');
+                const fileCount = document.getElementById('fileCount');
+                
+                if (appImages.length > 0) {
+                    dropZone.classList.add('has-files');
+                    dropZone.innerHTML = `
+                        <div class="drop-zone-icon">📁</div>
+                        <h2>${appImages.length} images loaded</h2>
+                        <p>Drop more images or edit metadata below</p>
+                    `;
+                    editor.classList.add('visible');
+                    this.renderTable();
+                } else {
+                    dropZone.classList.remove('has-files');
+                    dropZone.innerHTML = `
+                        <div class="drop-zone-icon">📁</div>
+                        <h2>Drop images here</h2>
+                        <p>Or click to browse files • Supports JPG, PNG, GIF, WebP</p>
+                    `;
+                    editor.classList.remove('visible');
+                }
+                
+                fileCount.textContent = appImages.length === 0 ? 
+                    'No images loaded' : 
+                    `${appImages.length} image${appImages.length !== 1 ? 's' : ''} loaded`;
+            }
+            
+            renderTable() {
+                const tbody = document.getElementById('imageTableBody');
+                tbody.innerHTML = '';
+                
+                appImages.forEach((image, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <img src="${image.preview}" alt="${image.filename}" class="image-preview">
+                        </td>
+                        <td class="filename-cell" title="${image.filename}">${image.filename}</td>
+                        <td>
+                            <input type="text" value="${image.metadata.title}" 
+                                   onchange="updateImageMetadata(${index}, 'title', this.value)">
+                        </td>
+                        <td>
+                            <input type="text" value="${image.metadata.creator}" 
+                                   onchange="updateImageMetadata(${index}, 'creator', this.value)">
+                        </td>
+                        <td>
+                            <input type="number" value="${image.metadata.year}" 
+                                   onchange="updateImageMetadata(${index}, 'year', this.value)">
+                        </td>
+                        <td>
+                            <input type="text" value="${image.metadata.location}" 
+                                   onchange="updateImageMetadata(${index}, 'location', this.value)">
+                        </td>
+                        <td>
+                            <textarea onchange="updateImageMetadata(${index}, 'description', this.value)">${image.metadata.description}</textarea>
+                        </td>
+                        <td>
+                            <input type="text" value="${image.metadata.subject}" 
+                                   onchange="updateImageMetadata(${index}, 'subject', this.value)">
+                        </td>
+                        <td>
+                            <button class="delete-btn" onclick="removeImage(${index})">×</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            
+            // Google Sheets functionality
+            extractSheetId(url) {
+                const patterns = [
+                    /\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/,
+                    /^([a-zA-Z0-9-_]+)$/
+                ];
+                
+                for (const pattern of patterns) {
+                    const match = url.match(pattern);
+                    if (match) {
+                        return match[1];
+                    }
+                }
+                return null;
+            }
+            
+            async importFromGoogleSheets(sheetUrl, range = 'Sheet1!A:I', apiKey = '') {
+                try {
+                    this.showStatusMessage('Connecting to Google Sheets...', 'info');
+                    
+                    const sheetId = this.extractSheetId(sheetUrl);
+                    if (!sheetId) {
+                        throw new Error('Invalid Google Sheets URL or ID');
+                    }
+                    
+                    let url;
+                    if (apiKey) {
+                        url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}?key=${apiKey}`;
+                    } else {
+                        url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=0`;
+                    }
+                    
+                    const response = await fetch(url);
+                    
+                    if (!response.ok) {
+                        throw new Error(`Failed to access sheet: ${response.status} ${response.statusText}`);
+                    }
+                    
+                    let data;
+                    if (apiKey) {
+                        const jsonData = await response.json();
+                        if (!jsonData.values) {
+                            throw new Error('No data found in the sheet');
+                        }
+                        data = jsonData.values;
+                    } else {
+                        const csvText = await response.text();
+                        data = this.parseCSVText(csvText);
+                    }
+                    
+                    await this.processGoogleSheetsData(data);
+                    this.showStatusMessage(`Successfully imported data from Google Sheets!`, 'success');
+                    
+                    setTimeout(() => {
+                        this.hideGoogleSheetsModal();
+                    }, 2000);
+                    
+                } catch (error) {
+                    console.error('Google Sheets import error:', error);
+                    this.showStatusMessage(`Error: ${error.message}. Make sure the sheet is publicly accessible or provide a valid API key.`, 'error');
+                }
+            }
+            
+            parseCSVText(csvText) {
+                const lines = csvText.trim().split('\n');
+                return lines.map(line => {
+                    const values = [];
+                    let current = '';
+                    let inQuotes = false;
+                    
+                    for (let i = 0; i < line.length; i++) {
+                        const char = line[i];
+                        if (char === '"') {
+                            inQuotes = !inQuotes;
+                        } else if (char === ',' && !inQuotes) {
+                            values.push(current.trim());
+                            current = '';
+                        } else {
+                            current += char;
+                        }
+                    }
+                    values.push(current.trim());
+                    return values;
+                });
+            }
+            
+            async processGoogleSheetsData(data) {
+                if (data.length < 2) {
+                    throw new Error('Sheet must contain at least a header row and one data row');
+                }
+                
+                const headers = data[0].map(h => h.toString().toLowerCase().trim());
+                let importedCount = 0;
+                
+                const columnMap = {
+                    filename: this.findColumnIndex(headers, ['filename', 'file', 'image']),
+                    title: this.findColumnIndex(headers, ['title', 'name', 'artwork']),
+                    creator: this.findColumnIndex(headers, ['creator', 'artist', 'author']),
+                    year: this.findColumnIndex(headers, ['year', 'date', 'created']),
+                    location: this.findColumnIndex(headers, ['location', 'place', 'origin']),
+                    description: this.findColumnIndex(headers, ['description', 'notes', 'details']),
+                    subject: this.findColumnIndex(headers, ['subject', 'tags', 'keywords', 'category']),
+                    imageUrl: this.findColumnIndex(headers, ['image_url', 'imageurl', 'url', 'link', 'image_link', 'photo'])
+                };
+                
+                const shouldImportImages = document.getElementById('importImages').checked;
+                
+                if (shouldImportImages) {
+                    this.showStatusMessage('Importing images... This may take a moment.', 'info');
+                    this.showProgress(true);
+                }
+                
+                for (let i = 1; i < data.length; i++) {
+                    const row = data[i];
+                    if (!row || row.length === 0) continue;
+                    
+                    const filename = row[columnMap.filename] ? row[columnMap.filename].toString().trim() : '';
+                    const imageUrl = columnMap.imageUrl >= 0 && row[columnMap.imageUrl] ? row[columnMap.imageUrl].toString().trim() : '';
+                    
+                    if (shouldImportImages && imageUrl) {
+                        await this.importImageFromUrl(imageUrl, row, columnMap, filename || `image_${i}.jpg`);
+                        importedCount++;
+                        this.updateProgress((i / (data.length - 1)) * 100);
+                        this.showStatusMessage(`Importing images... ${importedCount} of ${data.length - 1} processed.`, 'info');
+                    } else if (filename) {
+                        const existingImage = appImages.find(img => 
+                            img.filename.toLowerCase() === filename.toLowerCase()
+                        );
+                        
+                        if (existingImage) {
+                            this.updateImageMetadata(existingImage, row, columnMap);
+                            importedCount++;
+                        }
+                    }
+                }
+                
+                this.showProgress(false);
+                
+                if (importedCount === 0) {
+                    if (shouldImportImages) {
+                        throw new Error('No valid image URLs found. Make sure you have an image_url, url, or link column.');
+                    } else {
+                        throw new Error('No matching filenames found. Make sure the filename column matches your imported images.');
+                    }
+                }
+                
+                this.updateUI();
+                return importedCount;
+            }
+            
+            async importImageFromUrl(imageUrl, row, columnMap, defaultFilename) {
+                try {
+                    const directUrl = this.convertGoogleDriveUrl(imageUrl);
+                    
+                    const testImg = new Image();
+                    testImg.crossOrigin = 'anonymous';
+                    
+                    return new Promise((resolve, reject) => {
+                        testImg.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = testImg.width;
+                            canvas.height = testImg.height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(testImg, 0, 0);
+                            
+                            canvas.toBlob((blob) => {
+                                const imageData = {
+                                    id: Date.now() + Math.random(),
+                                    file: null,
+                                    filename: this.extractFilenameFromUrl(directUrl) || defaultFilename,
+                                    preview: canvas.toDataURL(),
+                                    sourceUrl: imageUrl,
+                                    metadata: this.extractMetadataFromRow(row, columnMap)
+                                };
+                                appImages.push(imageData);
+                                resolve();
+                            });
+                        };
+                        
+                        testImg.onerror = () => {
+                            console.warn(`Failed to load image from URL: ${imageUrl}`);
+                            resolve();
+                        };
+                        
+                        testImg.src = directUrl;
+                    });
+                } catch (error) {
+                    console.warn(`Error processing image URL ${imageUrl}:`, error);
+                }
+            }
+            
+            updateImageMetadata(image, row, columnMap) {
+                if (columnMap.title >= 0 && row[columnMap.title]) {
+                    image.metadata.title = row[columnMap.title].toString();
+                }
+                if (columnMap.creator >= 0 && row[columnMap.creator]) {
+                    image.metadata.creator = row[columnMap.creator].toString();
+                }
+                if (columnMap.year >= 0 && row[columnMap.year]) {
+                    image.metadata.year = row[columnMap.year].toString();
+                }
+                if (columnMap.location >= 0 && row[columnMap.location]) {
+                    image.metadata.location = row[columnMap.location].toString();
+                }
+                if (columnMap.description >= 0 && row[columnMap.description]) {
+                    image.metadata.description = row[columnMap.description].toString();
+                }
+                if (columnMap.subject >= 0 && row[columnMap.subject]) {
+                    image.metadata.subject = row[columnMap.subject].toString();
+                }
+            }
+            
+            extractMetadataFromRow(row, columnMap) {
+                return {
+                    title: columnMap.title >= 0 && row[columnMap.title] ? row[columnMap.title].toString() : '',
+                    creator: columnMap.creator >= 0 && row[columnMap.creator] ? row[columnMap.creator].toString() : '',
+                    year: columnMap.year >= 0 && row[columnMap.year] ? row[columnMap.year].toString() : '',
+                    location: columnMap.location >= 0 && row[columnMap.location] ? row[columnMap.location].toString() : '',
+                    description: columnMap.description >= 0 && row[columnMap.description] ? row[columnMap.description].toString() : '',
+                    subject: columnMap.subject >= 0 && row[columnMap.subject] ? row[columnMap.subject].toString() : ''
+                };
+            }
+            
+            convertGoogleDriveUrl(url) {
+                const patterns = [
+                    {
+                        regex: /drive\.google\.com\/file\/d\/([a-zA-Z0-9-_]+)/,
+                        template: 'https://drive.google.com/uc?export=download&id=$1'
+                    },
+                    {
+                        regex: /docs\.google\.com\/document\/d\/([a-zA-Z0-9-_]+)/,
+                        template: 'https://drive.google.com/uc?export=download&id=$1'
+                    }
+                ];
+                
+                for (const pattern of patterns) {
+                    const match = url.match(pattern.regex);
+                    if (match) {
+                        return pattern.template.replace('$1', match[1]);
+                    }
+                }
+                
+                return url;
+            }
+            
+            extractFilenameFromUrl(url) {
+                try {
+                    const urlObj = new URL(url);
+                    const pathname = urlObj.pathname;
+                    const filename = pathname.substring(pathname.lastIndexOf('/') + 1);
+                    return filename || 'imported_image.jpg';
+                } catch {
+                    return 'imported_image.jpg';
+                }
+            }
+            
+            findColumnIndex(headers, possibleNames) {
+                for (const name of possibleNames) {
+                    const index = headers.indexOf(name);
+                    if (index >= 0) return index;
+                }
+                return -1;
+            }
+            
+            autofillColumn(field) {
+                const value = document.getElementById(`bulk${field.charAt(0).toUpperCase() + field.slice(1)}`).value;
+                if (value.trim()) {
+                    appImages.forEach(image => {
+                        image.metadata[field] = value;
+                    });
+                    this.renderTable();
+                }
+            }
+            
+            exportToCSV() {
+                if (appImages.length === 0) {
+                    alert('No images to export');
+                    return;
+                }
+                
+                const headers = ['filename', 'title', 'creator', 'year', 'location', 'description', 'subject'];
+                const csvContent = [
+                    headers.join(','),
+                    ...appImages.map(image => 
+                        headers.map(header => 
+                            `"${(image.metadata[header] || image.filename).toString().replace(/"/g, '""')}"`
+                        ).join(',')
+                    )
+                ].join('\n');
+                
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'art-metadata.csv';
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+            
+            showProgress(show) {
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.display = show ? 'block' : 'none';
+                if (!show) {
+                    this.updateProgress(0);
+                }
+            }
+            
+            updateProgress(percent) {
+                const progressFill = document.getElementById('progressFill');
+                progressFill.style.width = percent + '%';
+            }
+            
+            showStatusMessage(message, type) {
+                const statusEl = document.getElementById('statusMessage');
+                statusEl.textContent = message;
+                statusEl.className = `status-message ${type}`;
+                statusEl.style.display = 'block';
+            }
+            
+            hideStatusMessage() {
+                const statusEl = document.getElementById('statusMessage');
+                statusEl.style.display = 'none';
+            }
+            
+            hideGoogleSheetsModal() {
+                document.getElementById('googleSheetsModal').classList.remove('visible');
+                document.getElementById('sheetsUrl').value = '';
+                document.getElementById('sheetRange').value = 'Sheet1!A:I';
+                document.getElementById('apiKey').value = '';
+                this.hideStatusMessage();
+            }
+            
+            showGoogleSheetsModal() {
+                document.getElementById('googleSheetsModal').classList.add('visible');
+                this.hideStatusMessage();
+            }
+            
+            // Cooper Hewitt import functionality
+            async importFromCooperHewitt(query = '', limit = 50, onlyWithImages = true) {
+                try {
+                    console.log('Starting Cooper Hewitt import...');
+                    this.showCooperHewittStatusMessage('Connecting to Cooper Hewitt API...', 'info');
+                    this.showProgress(true);
+                    
+                    // Build API URL for your local server
+                    const params = new URLSearchParams();
+                    if (query.trim()) {
+                        params.append('q', query.trim());
+                    }
+                    params.append('pp', Math.min(limit, 500).toString());
+                    
+                    const apiUrl = `/api/church?${params.toString()}`;
+                    
+                    // Add CORS and error handling
+                    const response = await fetch(apiUrl, {
+                        method: 'GET',
+                        mode: 'cors',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }).catch(error => {
+                        // If CORS fails, try without mode
+                        console.warn('CORS request failed, trying without mode:', error);
+                        return fetch(apiUrl, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        });
+                    });
+                    
+                    if (!response.ok) {
+                        let errorMessage = `API request failed: ${response.status} ${response.statusText}`;
+                        
+                        if (response.status === 0 || !response.status) {
+                            errorMessage = 'Cannot connect to API. Please check your internet connection and try again.';
+                        } else if (response.status === 404) {
+                            errorMessage = 'API endpoint not found. Check that /api/church is available on your server.';
+                        }
+                        
+                        throw new Error(errorMessage);
+                    }
+                    
+                    let data;
+                    try {
+                        data = await response.json();
+                    } catch (parseError) {
+                        throw new Error('Invalid JSON response from server. Check server logs for details.');
+                    }
+                    
+                    console.log('API Response received:', data);
+                    console.log('Objects count:', data.objects ? data.objects.length : 0);
+                    
+                    if (!data.objects || data.objects.length === 0) {
+                        console.log('No objects found in response');
+                        this.showCooperHewittStatusMessage('No artworks found with the current search criteria.', 'info');
+                        this.showProgress(false);
+                        return;
+                    }
+                    
+                    console.log(`Found ${data.objects.length} artworks. Starting to process...`);
+                    this.showCooperHewittStatusMessage(`Found ${data.objects.length} artworks. Processing images...`, 'info');
+                    
+                    let importedCount = 0;
+                    let processedCount = 0;
+                    
+                    // Process artworks (limit to reasonable number for performance)
+                    const artworksToProcess = data.objects.slice(0, Math.min(limit, data.objects.length));
+                    console.log('Processing first', artworksToProcess.length, 'artworks for testing');
+                    
+                    for (const artwork of artworksToProcess) {
+                        processedCount++;
+                        this.updateProgress((processedCount / artworksToProcess.length) * 100);
+                        
+                        console.log('--- Processing artwork ---');
+                        console.log('Title:', artwork.title);
+                        console.log('Has thumbnail:', !!artwork.thumbnail);
+                        console.log('Has images array:', !!artwork.images && artwork.images.length > 0);
+                        
+                        // Skip artworks without images if the option is selected
+                        if (onlyWithImages && (!artwork.images || artwork.images.length === 0) && !artwork.thumbnail) {
+                            console.log('Skipping artwork without images:', artwork.title);
+                            continue;
+                        }
+                        
+                        // Extract the best available image URL
+                        let imageUrl = null;
+                        
+                        // Try thumbnail first (usually available)
+                        if (artwork.thumbnail) {
+                            imageUrl = artwork.thumbnail;
+                            console.log('Using thumbnail URL:', imageUrl);
+                        }
+                        // Try images array with preference for large, then preview
+                        else if (artwork.images && artwork.images.length > 0) {
+                            const firstImage = artwork.images[0];
+                            imageUrl = firstImage.large || firstImage.preview || firstImage.original;
+                            console.log('Using images array URL:', imageUrl);
+                        }
+                        
+                        if (!imageUrl && onlyWithImages) {
+                            console.log('No image URL found for:', artwork.title);
+                            continue;
+                        }
+                        
+                        console.log(`Attempting to import: ${artwork.title}`);
+                        console.log('Image URL:', imageUrl);
+                        
+                        try {
+                            await this.importCooperHewittImage(artwork, imageUrl);
+                            importedCount++;
+                            console.log(`✅ Successfully imported: ${artwork.title}`);
+                        } catch (error) {
+                            console.error('❌ Failed to import artwork:', artwork.title);
+                            console.error('Error details:', error.message);
+                            console.error('Full error:', error);
+                        }
+                    }
+                    
+                    this.showProgress(false);
+                    
+                    console.log('Import completed. Final stats:');
+                    console.log('- Imported count:', importedCount);
+                    console.log('- Total appImages:', appImages.length);
+                    console.log('- Processed count:', processedCount);
+                    
+                    if (importedCount === 0) {
+                        console.log('No images were imported');
+                        this.showCooperHewittStatusMessage('No images could be imported. Check that the artworks have available images.', 'error');
+                    } else {
+                        console.log('Import successful!');
+                        this.showCooperHewittStatusMessage(`Successfully imported ${importedCount} artworks from Cooper Hewitt!`, 'success');
+                        setTimeout(() => {
+                            this.hideCooperHewittModal();
+                        }, 2000);
+                    }
+                    
+                    this.updateUI();
+                    console.log('UI updated. Final appImages length:', appImages.length);
+                    
+                } catch (error) {
+                    this.showProgress(false);
+                    this.showCooperHewittStatusMessage(`Error importing from Cooper Hewitt: ${error.message}`, 'error');
+                }
+            }
+            
+            async importCooperHewittImage(artwork, imageUrl) {
+                console.log('importCooperHewittImage called with:', artwork.title, imageUrl);
+                return new Promise((resolve, reject) => {
+                    // Create metadata for the artwork
+                    const metadata = {
+                        title: artwork.title || 'Untitled',
+                        creator: 'Frederic Edwin Church',
+                        year: this.extractYear(artwork.display_date),
+                        location: this.extractLocation(artwork),
+                        description: this.extractDescription(artwork),
+                        subject: this.extractSubject(artwork),
+                        // Additional Cooper Hewitt specific metadata
+                        accessionNumber: artwork.accession_number,
+                        medium: artwork.medium,
+                        measurements: artwork.measurements?.dimensions?.join(', '),
+                        geography: artwork.geography?.name || artwork.geography?.country,
+                        department: artwork.department?.join(', '),
+                        url: artwork.url
+                    };
+                    
+                    if (!imageUrl) {
+                        console.log('No image URL provided, creating placeholder');
+                        // Create a placeholder for artworks without images
+                        const placeholderImage = {
+                            id: Date.now() + Math.random(),
+                            filename: `${artwork.accession_number || 'artwork'}.jpg`,
+                            preview: 'data:image/svg+xml;base64,' + btoa(`
+                                <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="200" height="200" fill="#f0f0f0"/>
+                                    <text x="100" y="90" text-anchor="middle" fill="#999" font-family="Arial" font-size="10">${(artwork.title || 'No Title').substring(0, 30)}</text>
+                                    <text x="100" y="110" text-anchor="middle" fill="#999" font-family="Arial" font-size="8">No Image Available</text>
+                                </svg>
+                            `),
+                            metadata: metadata
+                        };
+                        
+                        appImages.push(placeholderImage);
+                        console.log('Placeholder added for:', artwork.title);
+                        resolve();
+                        return;
+                    }
+                    
+                    console.log('Creating Image object for URL:', imageUrl);
+                    const img = new Image();
+                    
+                    // Set crossOrigin to try to handle CORS
+                    img.crossOrigin = 'anonymous';
+                    
+                    img.onload = () => {
+                        console.log('Image loaded successfully for:', artwork.title);
+                        try {
+                            // Create canvas to convert image to data URL
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            
+                            // Resize image to reasonable size for performance
+                            const maxSize = 400;
+                            let { width, height } = img;
+                            if (width > maxSize || height > maxSize) {
+                                const ratio = Math.min(maxSize / width, maxSize / height);
+                                width *= ratio;
+                                height *= ratio;
+                            }
+                            
+                            canvas.width = width;
+                            canvas.height = height;
+                            ctx.drawImage(img, 0, 0, width, height);
+                            
+                            const artworkImage = {
+                                id: Date.now() + Math.random(),
+                                filename: `${artwork.accession_number || artwork.title || 'artwork'}.jpg`,
+                                preview: canvas.toDataURL('image/jpeg', 0.8),
+                                metadata: metadata
+                            };
+                            
+                            appImages.push(artworkImage);
+                            console.log('Artwork image added to appImages, total count:', appImages.length);
+                            resolve();
+                        } catch (canvasError) {
+                            console.error('Canvas error for artwork:', artwork.title, canvasError);
+                            // If canvas fails, create placeholder with image reference
+                            const fallbackImage = {
+                                id: Date.now() + Math.random(),
+                                filename: `${artwork.accession_number || artwork.title || 'artwork'}.jpg`,
+                                preview: imageUrl, // Use the original URL as fallback
+                                metadata: metadata
+                            };
+                            appImages.push(fallbackImage);
+                            console.log('Fallback image added for:', artwork.title);
+                            resolve();
+                        }
+                    };
+                    
+                    img.onerror = (error) => {
+                        console.error('Image load error for URL:', imageUrl);
+                        console.error('Error event:', error);
+                        
+                        // Instead of rejecting, create a fallback image with the URL
+                        const fallbackImage = {
+                            id: Date.now() + Math.random(),
+                            filename: `${artwork.accession_number || artwork.title || 'artwork'}.jpg`,
+                            preview: imageUrl, // Use the original URL even if it failed to load via canvas
+                            metadata: metadata
+                        };
+                        appImages.push(fallbackImage);
+                        console.log('Fallback image created due to load error for:', artwork.title);
+                        resolve(); // Resolve instead of reject
+                    };
+                    
+                    console.log('Setting image src to:', imageUrl);
+                    img.src = imageUrl;
+                });
+            }
+            
+            extractYear(displayDate) {
+                if (!displayDate) return '';
+                const yearMatch = displayDate.match(/\d{4}/);
+                return yearMatch ? yearMatch[0] : displayDate;
+            }
+            
+            extractLocation(artwork) {
+                const locations = [];
+                if (artwork.geography?.name) locations.push(artwork.geography.name);
+                if (artwork.geography?.country) locations.push(artwork.geography.country);
+                if (artwork.location) locations.push(artwork.location);
+                return locations.join(', ') || '';
+            }
+            
+            extractDescription(artwork) {
+                if (artwork.description && artwork.description.length > 0) {
+                    return artwork.description.map(d => d.value || d).join(' ');
+                }
+                
+                const descriptions = [];
+                if (artwork.medium) descriptions.push(`Medium: ${artwork.medium}`);
+                if (artwork.measurements?.dimensions) {
+                    descriptions.push(`Dimensions: ${artwork.measurements.dimensions.join(', ')}`);
+                }
+                if (artwork.note) descriptions.push(artwork.note);
+                
+                return descriptions.join('. ') || '';
+            }
+            
+            extractSubject(artwork) {
+                const subjects = [];
+                if (artwork.name && artwork.name.length > 0) subjects.push(...artwork.name);
+                if (artwork.classification && artwork.classification.length > 0) subjects.push(...artwork.classification);
+                if (artwork.culture && artwork.culture.length > 0) subjects.push(...artwork.culture);
+                if (artwork.period && artwork.period.length > 0) subjects.push(...artwork.period);
+                
+                return subjects.join(', ') || 'Painting';
+            }
+            
+            showCooperHewittStatusMessage(message, type) {
+                const statusEl = document.getElementById('cooperHewittStatusMessage');
+                statusEl.textContent = message;
+                statusEl.className = `status-message ${type}`;
+                statusEl.style.display = 'block';
+            }
+            
+            hideCooperHewittStatusMessage() {
+                const statusEl = document.getElementById('cooperHewittStatusMessage');
+                statusEl.style.display = 'none';
+            }
+            
+            hideCooperHewittModal() {
+                document.getElementById('cooperHewittModal').classList.remove('visible');
+                document.getElementById('cooperHewittQuery').value = '';
+                document.getElementById('cooperHewittLimit').value = '50';
+                this.hideCooperHewittStatusMessage();
+            }
+            
+            showCooperHewittModal() {
+                document.getElementById('cooperHewittModal').classList.add('visible');
+                this.hideCooperHewittStatusMessage();
+                // Test server connectivity when modal opens
+                this.testServerConnection();
+            }
+            
+            async testServerConnection() {
+                try {
+                    const response = await fetch('/api/church?pp=1', {
+                        method: 'GET',
+                        mode: 'cors',
+                    }).catch(() => {
+                        return fetch('/api/church?pp=1');
+                    });
+                    
+                    if (response.ok) {
+                        this.showCooperHewittStatusMessage('Server connection successful!', 'success');
+                        setTimeout(() => this.hideCooperHewittStatusMessage(), 2000);
+                    } else {
+                        this.showCooperHewittStatusMessage(`Server responded with error: ${response.status}`, 'error');
+                    }
+                } catch (error) {
+                    this.showCooperHewittStatusMessage('Cannot connect to API. Please check your internet connection.', 'error');
+                }
+            }
+        }
+        
+        // Canvas Application
+        class ArtCanvas {
+            constructor() {
+                this.canvas = document.getElementById('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.images = [];
+                this.isDragging = false;
+                this.draggedImage = null;
+                this.dragOffset = { x: 0, y: 0 };
+                this.gridSize = 20;
+                this.friction = 0.9;
+                
+                // Zoom and pan state
+                this.zoom = 1.0;
+                this.minZoom = 0.1;
+                this.maxZoom = 3.0;
+                this.panX = 0;
+                this.panY = 0;
+                this.isPanning = false;
+                this.panStart = { x: 0, y: 0 };
+                this.lastPan = { x: 0, y: 0 };
+                
+                // Click detection
+                this.mouseDownTime = 0;
+                this.mouseDownPos = { x: 0, y: 0 };
+                this.clickThreshold = 200; // ms
+                this.moveThreshold = 5; // pixels
+                
+                this.setupCanvas();
+                this.setupEventListeners();
+                this.animate();
+            }
+            
+            setupCanvas() {
+                this.resizeCanvas();
+                window.addEventListener('resize', () => {
+                    if (currentPage === 'canvas') {
+                        this.resizeCanvas();
+                    }
+                });
+            }
+            
+            resizeCanvas() {
+                if (this.canvas) {
+                    this.canvas.width = window.innerWidth;
+                    this.canvas.height = window.innerHeight - 110; // Account for nav + toolbar
+                }
+            }
+            
+            setupEventListeners() {
+                if (!this.canvas) return;
+                
+                // Mouse events
+                this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e));
+                this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+                this.canvas.addEventListener('mouseup', (e) => this.handleMouseUp(e));
+                this.canvas.addEventListener('mouseleave', (e) => this.handleMouseUp(e));
+                
+                // Zoom with mouse wheel
+                this.canvas.addEventListener('wheel', (e) => this.handleWheel(e));
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (currentPage === 'canvas') {
+                        this.handleKeyDown(e);
+                    }
+                });
+            }
+            
+            // Coordinate transformation helpers
+            screenToWorld(screenX, screenY) {
+                return {
+                    x: (screenX - this.panX) / this.zoom,
+                    y: (screenY - this.panY) / this.zoom
+                };
+            }
+            
+            worldToScreen(worldX, worldY) {
+                return {
+                    x: worldX * this.zoom + this.panX,
+                    y: worldY * this.zoom + this.panY
+                };
+            }
+            
+            getMousePos(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                return {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            }
+            
+            handleMouseDown(e) {
+                const mousePos = this.getMousePos(e);
+                const worldPos = this.screenToWorld(mousePos.x, mousePos.y);
+                
+                this.mouseDownTime = Date.now();
+                this.mouseDownPos = { ...mousePos };
+                
+                // Check if clicking on an image
+                let clickedImage = null;
+                for (let i = this.images.length - 1; i >= 0; i--) {
+                    const img = this.images[i];
+                    if (worldPos.x >= img.x && worldPos.x <= img.x + img.width &&
+                        worldPos.y >= img.y && worldPos.y <= img.y + img.height) {
+                        clickedImage = img;
+                        break;
+                    }
+                }
+                
+                if (clickedImage && e.button === 0) { // Left mouse button
+                    this.isDragging = true;
+                    this.draggedImage = clickedImage;
+                    this.dragOffset.x = worldPos.x - clickedImage.x;
+                    this.dragOffset.y = worldPos.y - clickedImage.y;
+                    this.canvas.classList.add('dragging');
+                } else if (e.button === 0) { // Left click on empty space - start panning
+                    this.isPanning = true;
+                    this.panStart = { ...mousePos };
+                    this.lastPan = { x: this.panX, y: this.panY };
+                    this.canvas.classList.add('panning');
+                }
+            }
+            
+            handleMouseMove(e) {
+                const mousePos = this.getMousePos(e);
+                const worldPos = this.screenToWorld(mousePos.x, mousePos.y);
+                
+                if (this.isDragging && this.draggedImage) {
+                    const newX = worldPos.x - this.dragOffset.x;
+                    const newY = worldPos.y - this.dragOffset.y;
+                    
+                    this.draggedImage.velocity.x = newX - this.draggedImage.x;
+                    this.draggedImage.velocity.y = newY - this.draggedImage.y;
+                    
+                    this.draggedImage.x = newX;
+                    this.draggedImage.y = newY;
+                } else if (this.isPanning) {
+                    this.panX = this.lastPan.x + (mousePos.x - this.panStart.x);
+                    this.panY = this.lastPan.y + (mousePos.y - this.panStart.y);
+                } else {
+                    this.showTooltip(mousePos.x, mousePos.y, worldPos);
+                }
+            }
+            
+            handleMouseUp(e) {
+                const mousePos = this.getMousePos(e);
+                const clickDuration = Date.now() - this.mouseDownTime;
+                const mouseMoved = Math.abs(mousePos.x - this.mouseDownPos.x) + Math.abs(mousePos.y - this.mouseDownPos.y);
+                
+                // Check for image click (short click with minimal movement)
+                if (this.draggedImage && clickDuration < this.clickThreshold && mouseMoved < this.moveThreshold) {
+                    this.showImageDetail(this.draggedImage);
+                }
+                
+                if (this.isDragging && this.draggedImage) {
+                    this.draggedImage.x = Math.round(this.draggedImage.x / this.gridSize) * this.gridSize;
+                    this.draggedImage.y = Math.round(this.draggedImage.y / this.gridSize) * this.gridSize;
+                }
+                
+                this.isDragging = false;
+                this.draggedImage = null;
+                this.isPanning = false;
+                this.canvas.classList.remove('dragging', 'panning');
+            }
+            
+            handleWheel(e) {
+                e.preventDefault();
+                
+                const mousePos = this.getMousePos(e);
+                const worldPosBefore = this.screenToWorld(mousePos.x, mousePos.y);
+                
+                // Zoom
+                const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+                this.setZoom(this.zoom * zoomFactor, mousePos.x, mousePos.y);
+                
+                const worldPosAfter = this.screenToWorld(mousePos.x, mousePos.y);
+                
+                // Adjust pan to keep mouse position constant
+                this.panX += (worldPosAfter.x - worldPosBefore.x) * this.zoom;
+                this.panY += (worldPosAfter.y - worldPosBefore.y) * this.zoom;
+            }
+            
+            handleKeyDown(e) {
+                switch(e.key) {
+                    case '=':
+                    case '+':
+                        e.preventDefault();
+                        this.zoomIn();
+                        break;
+                    case '-':
+                        e.preventDefault();
+                        this.zoomOut();
+                        break;
+                    case '0':
+                        e.preventDefault();
+                        this.resetView();
+                        break;
+                }
+            }
+            
+            setZoom(newZoom, centerX, centerY) {
+                this.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, newZoom));
+                this.updateZoomDisplay();
+                
+                // Update background pattern size
+                const patternSize = 20 * this.zoom;
+                this.canvas.style.backgroundSize = `${patternSize}px ${patternSize}px`;
+            }
+            
+            zoomIn() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                this.setZoom(this.zoom * 1.2, centerX, centerY);
+            }
+            
+            zoomOut() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                this.setZoom(this.zoom / 1.2, centerX, centerY);
+            }
+            
+            resetView() {
+                this.zoom = 1.0;
+                this.panX = 0;
+                this.panY = 0;
+                this.updateZoomDisplay();
+                this.canvas.style.backgroundSize = '20px 20px';
+            }
+            
+            updateZoomDisplay() {
+                const zoomLevel = document.getElementById('zoomLevel');
+                if (zoomLevel) {
+                    zoomLevel.textContent = Math.round(this.zoom * 100) + '%';
+                }
+            }
+            
+            showImageDetail(image) {
+                const modal = document.getElementById('imageDetailModal');
+                const detailImage = document.getElementById('detailImage');
+                const detailTitle = document.getElementById('detailTitle');
+                const detailFilename = document.getElementById('detailFilename');
+                const detailCreator = document.getElementById('detailCreator');
+                const detailYear = document.getElementById('detailYear');
+                const detailLocation = document.getElementById('detailLocation');
+                const detailSubject = document.getElementById('detailSubject');
+                const detailDescription = document.getElementById('detailDescription');
+                
+                // Populate modal with image data
+                detailImage.src = image.preview;
+                detailTitle.textContent = image.metadata.title || 'Untitled';
+                detailFilename.textContent = image.filename;
+                
+                detailCreator.textContent = image.metadata.creator || 'Unknown';
+                detailCreator.className = image.metadata.creator ? 'metadata-value' : 'metadata-value empty';
+                
+                detailYear.textContent = image.metadata.year || 'Unknown';
+                detailYear.className = image.metadata.year ? 'metadata-value' : 'metadata-value empty';
+                
+                detailLocation.textContent = image.metadata.location || 'Unknown';
+                detailLocation.className = image.metadata.location ? 'metadata-value' : 'metadata-value empty';
+                
+                detailSubject.textContent = image.metadata.subject || 'None';
+                detailSubject.className = image.metadata.subject ? 'metadata-value' : 'metadata-value empty';
+                
+                detailDescription.textContent = image.metadata.description || 'No description available';
+                detailDescription.className = image.metadata.description ? 'metadata-value' : 'metadata-value empty';
+                
+                modal.classList.add('visible');
+            }
+            
+            closeImageDetail() {
+                const modal = document.getElementById('imageDetailModal');
+                modal.classList.remove('visible');
+            }
+            
+            applyPhysics() {
+                this.images.forEach(img => {
+                    if (img !== this.draggedImage) {
+                        img.velocity.x *= this.friction;
+                        img.velocity.y *= this.friction;
+                        
+                        img.x += img.velocity.x;
+                        img.y += img.velocity.y;
+                        
+                        // Boundary collision (in world coordinates)
+                        const worldBounds = { minX: 0, minY: 0, maxX: 3000, maxY: 3000 };
+                        if (img.x < worldBounds.minX || img.x > worldBounds.maxX - img.width) {
+                            img.velocity.x *= -0.5;
+                            img.x = Math.max(worldBounds.minX, Math.min(worldBounds.maxX - img.width, img.x));
+                        }
+                        if (img.y < worldBounds.minY || img.y > worldBounds.maxY - img.height) {
+                            img.velocity.y *= -0.5;
+                            img.y = Math.max(worldBounds.minY, Math.min(worldBounds.maxY - img.height, img.y));
+                        }
+                    }
+                });
+            }
+            
+            loadImagesFromImporter(importedImages) {
+                this.images = importedImages.map(img => ({
+                    ...img,
+                    x: Math.random() * (2000 - 150) + 75, // Larger world space
+                    y: Math.random() * (2000 - 150) + 75,
+                    width: 120,
+                    height: 120,
+                    velocity: { x: 0, y: 0 }
+                }));
+            }
+            
+            handleMouseDown(e) {
+                const mousePos = this.getMousePos(e);
+                const worldPos = this.screenToWorld(mousePos.x, mousePos.y);
+                
+                this.mouseDownTime = Date.now();
+                this.mouseDownPos = { ...mousePos };
+                
+                // Check if clicking on an image
+                let clickedImage = null;
+                for (let i = this.images.length - 1; i >= 0; i--) {
+                    const img = this.images[i];
+                    if (worldPos.x >= img.x && worldPos.x <= img.x + img.width &&
+                        worldPos.y >= img.y && worldPos.y <= img.y + img.height) {
+                        clickedImage = img;
+                        break;
+                    }
+                }
+                
+                if (clickedImage && e.button === 0) { // Left mouse button
+                    this.isDragging = true;
+                    this.draggedImage = clickedImage;
+                    this.dragOffset.x = worldPos.x - clickedImage.x;
+                    this.dragOffset.y = worldPos.y - clickedImage.y;
+                    this.canvas.classList.add('dragging');
+                } else if (e.button === 0) { // Left click on empty space - start panning
+                    this.isPanning = true;
+                    this.panStart = { ...mousePos };
+                    this.lastPan = { x: this.panX, y: this.panY };
+                    this.canvas.classList.add('panning');
+                }
+            }
+            
+            handleMouseMove(e) {
+                const mousePos = this.getMousePos(e);
+                const worldPos = this.screenToWorld(mousePos.x, mousePos.y);
+                
+                if (this.isDragging && this.draggedImage) {
+                    const newX = worldPos.x - this.dragOffset.x;
+                    const newY = worldPos.y - this.dragOffset.y;
+                    
+                    this.draggedImage.velocity.x = newX - this.draggedImage.x;
+                    this.draggedImage.velocity.y = newY - this.draggedImage.y;
+                    
+                    this.draggedImage.x = newX;
+                    this.draggedImage.y = newY;
+                } else if (this.isPanning) {
+                    this.panX = this.lastPan.x + (mousePos.x - this.panStart.x);
+                    this.panY = this.lastPan.y + (mousePos.y - this.panStart.y);
+                } else {
+                    this.showTooltip(mousePos.x, mousePos.y, worldPos);
+                }
+            }
+            
+            handleMouseUp(e) {
+                const mousePos = this.getMousePos(e);
+                const clickDuration = Date.now() - this.mouseDownTime;
+                const mouseMoved = Math.abs(mousePos.x - this.mouseDownPos.x) + Math.abs(mousePos.y - this.mouseDownPos.y);
+                
+                // Check for image click (short click with minimal movement)
+                if (this.draggedImage && clickDuration < this.clickThreshold && mouseMoved < this.moveThreshold) {
+                    this.showImageDetail(this.draggedImage);
+                }
+                
+                if (this.isDragging && this.draggedImage) {
+                    this.draggedImage.x = Math.round(this.draggedImage.x / this.gridSize) * this.gridSize;
+                    this.draggedImage.y = Math.round(this.draggedImage.y / this.gridSize) * this.gridSize;
+                }
+                
+                this.isDragging = false;
+                this.draggedImage = null;
+                this.isPanning = false;
+                this.canvas.classList.remove('dragging', 'panning');
+            }
+            
+            showTooltip(screenX, screenY, worldPos) {
+                const tooltip = document.getElementById('tooltip');
+                let hoveredImage = null;
+                
+                for (let i = this.images.length - 1; i >= 0; i--) {
+                    const img = this.images[i];
+                    if (worldPos.x >= img.x && worldPos.x <= img.x + img.width &&
+                        worldPos.y >= img.y && worldPos.y <= img.y + img.height) {
+                        hoveredImage = img;
+                        break;
+                    }
+                }
+                
+                if (hoveredImage) {
+                    const meta = hoveredImage.metadata;
+                    tooltip.innerHTML = `
+                        <strong>${meta.title || 'Untitled'}</strong><br>
+                        ${meta.creator || 'Unknown'} ${meta.year ? `(${meta.year})` : ''}<br>
+                        ${meta.location || 'Unknown location'}<br>
+                        <small>Click to view details</small>
+                    `;
+                    tooltip.style.left = screenX + 15 + 'px';
+                    tooltip.style.top = screenY + 75 + 'px'; // Account for nav bar
+                    tooltip.style.opacity = '1';
+                } else {
+                    tooltip.style.opacity = '0';
+                }
+            }
+            
+            sortByTime() {
+                const sortedImages = [...this.images].sort((a, b) => (a.metadata.year || 0) - (b.metadata.year || 0));
+                const spacing = 180;
+                const startX = 100;
+                const y = 100;
+                
+                sortedImages.forEach((img, index) => {
+                    this.animateToPosition(img, startX + index * spacing, y);
+                });
+            }
+            
+            sortByGeography() {
+                const regions = {
+                    'North America': { x: 100, y: 100, images: [] },
+                    'South America': { x: 100, y: 400, images: [] },
+                    'Europe': { x: 400, y: 100, images: [] },
+                    'Asia': { x: 700, y: 100, images: [] },
+                    'Africa': { x: 400, y: 400, images: [] },
+                    'Unknown': { x: 700, y: 400, images: [] }
+                };
+                
+                this.images.forEach(img => {
+                    let region = 'Unknown';
+                    const location = (img.metadata.location || img.metadata.geography || '').toLowerCase();
+                    
+                    if (location.includes('united states') || location.includes('america') || 
+                        location.includes('usa') || location.includes('new york') || 
+                        location.includes('canada') || location.includes('mexico')) {
+                        region = 'North America';
+                    } else if (location.includes('brazil') || location.includes('argentina') || 
+                              location.includes('chile') || location.includes('south america')) {
+                        region = 'South America';
+                    } else if (location.includes('europe') || location.includes('france') || 
+                              location.includes('italy') || location.includes('germany') || 
+                              location.includes('england') || location.includes('spain')) {
+                        region = 'Europe';
+                    } else if (location.includes('asia') || location.includes('china') || 
+                              location.includes('japan') || location.includes('india')) {
+                        region = 'Asia';
+                    } else if (location.includes('africa') || location.includes('egypt')) {
+                        region = 'Africa';
+                    }
+                    
+                    regions[region].images.push(img);
+                });
 
-function openImageModal(imageUrl, title, date, accessionNumber, medium) {
-  const modal = document.getElementById('imageModal');
-  const modalImage = document.getElementById('modalImage');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalMeta = document.getElementById('modalMeta');
-  
-  modalImage.src = imageUrl;
-  modalTitle.textContent = title || 'Untitled';
-  modalMeta.innerHTML = `
-    ${date ? `<div><strong>Date:</strong> ${date}</div>` : ''}
-    ${accessionNumber ? `<div><strong>Accession:</strong> ${accessionNumber}</div>` : ''}
-    ${medium ? `<div><strong>Medium:</strong> ${medium}</div>` : ''}
-  `;
-  
-  modal.classList.add('show');
-  document.body.style.overflow = 'hidden'; // Prevent background scrolling
-}
+                Object.entries(regions).forEach(([regionName, region]) => {
+                    region.images.forEach((img, index) => {
+                        const offsetX = (index % 4) * 120;
+                        const offsetY = Math.floor(index / 4) * 100;
+                        this.animateToPosition(img, region.x + offsetX, region.y + offsetY);
+                    });
+                });
+            }
+            
+            sortByCreator() {
+                const creators = {};
+                this.images.forEach(img => {
+                    const creator = img.metadata.creator || 'Unknown';
+                    if (!creators[creator]) creators[creator] = [];
+                    creators[creator].push(img);
+                });
+                
+                let currentX = 100;
+                Object.values(creators).forEach(creatorImages => {
+                    creatorImages.forEach((img, index) => {
+                        this.animateToPosition(img, currentX, 100 + index * 140);
+                    });
+                    currentX += 200;
+                });
+            }
+            
+            sortByMedium() {
+                const mediums = {};
+                this.images.forEach(img => {
+                    let medium = 'Unknown';
+                    const mediumText = (img.metadata.medium || '').toLowerCase();
+                    
+                    if (mediumText.includes('oil')) {
+                        medium = 'Oil Painting';
+                    } else if (mediumText.includes('watercolor') || mediumText.includes('water color')) {
+                        medium = 'Watercolor';
+                    } else if (mediumText.includes('pencil') || mediumText.includes('graphite')) {
+                        medium = 'Drawing';
+                    } else if (mediumText.includes('print') || mediumText.includes('etching')) {
+                        medium = 'Print';
+                    } else if (mediumText.includes('photograph')) {
+                        medium = 'Photography';
+                    } else if (mediumText) {
+                        medium = 'Other';
+                    }
+                    
+                    if (!mediums[medium]) mediums[medium] = [];
+                    mediums[medium].push(img);
+                });
 
-function closeImageModal() {
-  const modal = document.getElementById('imageModal');
-  modal.classList.remove('show');
-  document.body.style.overflow = 'auto'; // Restore scrolling
-}
+                const positions = {
+                    'Oil Painting': { x: 100, y: 100 },
+                    'Watercolor': { x: 400, y: 100 },
+                    'Drawing': { x: 700, y: 100 },
+                    'Print': { x: 100, y: 400 },
+                    'Photography': { x: 400, y: 400 },
+                    'Other': { x: 700, y: 400 },
+                    'Unknown': { x: 500, y: 300 }
+                };
 
-// Close modal when clicking outside the image
-document.getElementById('imageModal').addEventListener('click', function(e) {
-  if (e.target === this) {
-    closeImageModal();
-  }
-});
-
-// Close modal with Escape key
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    closeImageModal();
-  }
-});
-
-async function fetchPage() {
-  const pp = document.getElementById("pp").value || "50";
-  const q  = document.getElementById("q").value.trim();
-  const url = `/api/church?per_page=${encodeURIComponent(pp)}&page=${encodeURIComponent(page)}${q ? "&query="+encodeURIComponent(q):""}`;
-
-  const r = await fetch(url);
-  if (!r.ok) throw new Error("HTTP "+r.status);
-  const data = await r.json();
-
-  pages = data.pages || 1;
-  document.getElementById("info").textContent = `Page ${page} of ${pages} — ${data.total||0} objects`;
-
-  if (isDetailedView) {
-    renderDetailedView(data);
-  } else {
-    renderTableView(data);
-  }
-}
-
-function toggleView() {
-  isDetailedView = !isDetailedView;
-  const tableView = document.getElementById("t");
-  const detailedView = document.getElementById("detailed-view");
-  const toggleButton = document.getElementById("toggleView");
-  
-  if (isDetailedView) {
-    tableView.style.display = "none";
-    detailedView.style.display = "block";
-    toggleButton.textContent = "Switch to Table View";
-    // Reduce per page for detailed view since it shows more data
-    const ppInput = document.getElementById("pp");
-    if (parseInt(ppInput.value) > 10) {
-      ppInput.value = "10";
-    }
-  } else {
-    tableView.style.display = "table";
-    detailedView.style.display = "none";
-    toggleButton.textContent = "Switch to Detailed View";
-  }
-  
-  // Refresh current page with new view
-  fetchPage().catch(alert);
-}
-
-document.getElementById("go").onclick = ()=>{ page=1; fetchPage().catch(alert); };
-document.getElementById("prev").onclick = ()=>{ if(page>1){ page--; fetchPage().catch(alert);} };
-document.getElementById("next").onclick = ()=>{ if(page<pages){ page++; fetchPage().catch(alert);} };
-document.getElementById("toggleView").onclick = toggleView;
-
-// initial load
-fetchPage().catch(err => { document.getElementById("info").textContent = err.message; });
-</script>
-
+                Object.entries(mediums).forEach(([medium, images]) => {
+                    const pos = positions[medium] || positions['Unknown'];
+                    images.forEach((img, index) => {
+                        const offsetX = (index % 3) * 120;
+                        const offsetY = Math.floor(index / 3) * 100;
+                        this.animateToPosition(img, pos.x + offsetX, pos.y + offsetY);
+                    });
+                });
+            }
+            
+            animateToPosition(img, targetX, targetY) {
+                const animate = () => {
+                    const dx = targetX - img.x;
+                    const dy = targetY - img.y;
+                    
+                    if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+                        img.x += dx * 0.1;
+                        img.y += dy * 0.1;
+                        requestAnimationFrame(animate);
+                    } else {
+                        img.x = targetX;
+                        img.y = targetY;
+                    }
+                };
+                animate();
+            }
+            
+            resetPhysics() {
+                this.images.forEach(img => {
+                    img.velocity.x = (Math.random() - 0.5) * 10;
+                    img.velocity.y = (Math.random() - 0.5) * 10;
+                });
+            }
+            
+            saveArrangement() {
+                const data = {
+                    images: this.images.map(img => ({
+                        id: img.id,
+                        x: img.x,
+                        y: img.y,
+                        metadata: img.metadata
+                    })),
+                    view: {
+                        zoom: this.zoom,
+                        panX: this.panX,
+                        panY: this.panY
+                    }
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'art-arrangement.json';
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+            
+            loadArrangement() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            try {
+                                const data = JSON.parse(e.target.result);
+                                if (data.view) {
+                                    this.zoom = data.view.zoom || 1.0;
+                                    this.panX = data.view.panX || 0;
+                                    this.panY = data.view.panY || 0;
+                                    this.updateZoomDisplay();
+                                }
+                                // Restore positions if images match
+                                console.log('Loading arrangement:', data);
+                            } catch (error) {
+                                alert('Invalid file format');
+                            }
+                        };
+                        reader.readAsText(file);
+                    }
+                };
+                input.click();
+            }
+            
+            render() {
+                if (!this.canvas) return;
+                
+                this.ctx.save();
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Apply zoom and pan transformation
+                this.ctx.translate(this.panX, this.panY);
+                this.ctx.scale(this.zoom, this.zoom);
+                
+                this.images.forEach(img => {
+                    this.ctx.save();
+                    
+                    this.ctx.shadowColor = 'rgba(0,0,0,0.3)';
+                    this.ctx.shadowBlur = 10 / this.zoom; // Adjust shadow for zoom
+                    this.ctx.shadowOffsetX = 2 / this.zoom;
+                    this.ctx.shadowOffsetY = 2 / this.zoom;
+                    
+                    // Create image element if needed
+                    if (!img.imgElement) {
+                        img.imgElement = new Image();
+                        img.imgElement.src = img.preview;
+                    }
+                    
+                    if (img.imgElement.complete) {
+                        this.ctx.drawImage(img.imgElement, img.x, img.y, img.width, img.height);
+                    }
+                    
+                    this.ctx.restore();
+                });
+                
+                this.ctx.restore();
+            }
+            
+            animate() {
+                this.applyPhysics();
+                this.render();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+        
+        // Global functions
+        let imageImporter;
+        
+        function updateImageMetadata(index, field, value) {
+            if (appImages[index]) {
+                appImages[index].metadata[field] = value;
+            }
+        }
+        
+        function removeImage(index) {
+            appImages.splice(index, 1);
+            imageImporter.updateUI();
+            updateCanvasVisibility();
+        }
+        
+        function clearAllImages() {
+            if (appImages.length > 0 && confirm('Are you sure you want to clear all images and metadata?')) {
+                appImages = [];
+                imageImporter.updateUI();
+                updateCanvasVisibility();
+            }
+        }
+        
+        function showGoogleSheetsModal() {
+            imageImporter.showGoogleSheetsModal();
+        }
+        
+        function hideGoogleSheetsModal() {
+            imageImporter.hideGoogleSheetsModal();
+        }
+        
+        function showCooperHewittModal() {
+            // Switch to Cooper Hewitt tab instead of showing modal
+            showImportMethod('cooper-hewitt');
+        }
+        
+        function hideCooperHewittModal() {
+            imageImporter.hideCooperHewittModal();
+        }
+        
+        async function importFromCooperHewitt() {
+            const query = document.getElementById('cooperHewittQuery').value.trim();
+            const limit = parseInt(document.getElementById('cooperHewittLimit').value) || 50;
+            const onlyWithImages = document.getElementById('cooperHewittOnlyWithImages').checked;
+            
+            await imageImporter.importFromCooperHewitt(query, limit, onlyWithImages);
+        }
+        
+        async function testServerConnection() {
+            await imageImporter.testServerConnection();
+        }
+        
+        async function importFromGoogleSheets() {
+            const url = document.getElementById('sheetsUrl').value.trim();
+            const range = document.getElementById('sheetRange').value.trim() || 'Sheet1!A:I';
+            const apiKey = document.getElementById('apiKey').value.trim();
+            
+            if (!url) {
+                imageImporter.showStatusMessage('Please enter a Google Sheets URL or ID', 'error');
+                return;
+            }
+            
+            await imageImporter.importFromGoogleSheets(url, range, apiKey);
+        }
+        
+        function autofillColumn(field) {
+            imageImporter.autofillColumn(field);
+        }
+        
+        function exportToCSV() {
+            imageImporter.exportToCSV();
+        }
+        
+        // Canvas toolbar functions
+        function sortByTime() {
+            if (canvasApp) canvasApp.sortByTime();
+        }
+        
+        function sortByGeography() {
+            if (canvasApp) canvasApp.sortByGeography();
+        }
+        
+        function sortByCreator() {
+            if (canvasApp) canvasApp.sortByCreator();
+        }
+        
+        function sortByMedium() {
+            if (canvasApp) canvasApp.sortByMedium();
+        }
+        
+        function resetPhysics() {
+            if (canvasApp) canvasApp.resetPhysics();
+        }
+        
+        function saveArrangement() {
+            if (canvasApp) canvasApp.saveArrangement();
+        }
+        
+        function loadArrangement() {
+            if (canvasApp) canvasApp.loadArrangement();
+        }
+        
+        // Zoom controls
+        function zoomIn() {
+            if (canvasApp) canvasApp.zoomIn();
+        }
+        
+        function zoomOut() {
+            if (canvasApp) canvasApp.zoomOut();
+        }
+        
+        function resetView() {
+            if (canvasApp) canvasApp.resetView();
+        }
+        
+        // Image detail modal
+        function closeImageDetail() {
+            if (canvasApp) canvasApp.closeImageDetail();
+        }
+        
+        // Close modal when clicking outside content
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('imageDetailModal');
+            if (e.target === modal) {
+                closeImageDetail();
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeImageDetail();
+            }
+        });
+        
+        // Initialize application
+        window.addEventListener('load', () => {
+            imageImporter = new ImageImporter();
+            updateCanvasVisibility();
+            initializeCooperHewittBrowser();
+        });
+        
+        // Cooper Hewitt Collection Browser
+        let chPage = 1, chPages = 1, chIsDetailedView = false, chSelectedArtworks = [];
+        let chCurrentArtworks = []; // Store current page artworks for selection
+        
+        function initializeCooperHewittBrowser() {
+            document.getElementById('ch-go').onclick = () => searchCooperHewitt();
+            document.getElementById('ch-prev').onclick = () => navigateCooperHewitt(-1);
+            document.getElementById('ch-next').onclick = () => navigateCooperHewitt(1);
+            document.getElementById('ch-toggleView').onclick = () => toggleCooperHewittView();
+            document.getElementById('ch-selectAll').onclick = () => selectAllCooperHewittArtworks();
+            document.getElementById('ch-selectNone').onclick = () => selectNoCooperHewittArtworks();
+            document.getElementById('ch-importSelected').onclick = () => importSelectedArtworks();
+            
+            // Clear the table and show initial message
+            document.getElementById('ch-table-body').innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #ccc;">Click "Search" to browse the Cooper Hewitt collection</td></tr>';
+            document.getElementById('ch-info').textContent = 'Ready to search Cooper Hewitt collection';
+            
+            // Enable enter key for search
+            document.getElementById('ch-q').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchCooperHewitt();
+                }
+            });
+        }
+        
+        async function searchCooperHewitt() {
+            const query = document.getElementById('ch-q').value;
+            const perPage = parseInt(document.getElementById('ch-pp').value) || 20;
+            const searchButton = document.getElementById('ch-go');
+            
+            // Reset to page 1 for new search
+            chPage = 1;
+            
+            // Show loading state
+            searchButton.disabled = true;
+            searchButton.textContent = 'Searching...';
+            document.getElementById('ch-table-body').innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #ccc;">Searching Cooper Hewitt collection...</td></tr>';
+            
+            try {
+                const params = new URLSearchParams();
+                if (query.trim()) {
+                    params.append('q', query.trim());
+                    console.log('Searching with query:', query.trim());
+                }
+                params.append('pp', perPage.toString());
+                params.append('page', chPage.toString());
+                
+                console.log('Fetching URL:', `/api/church?${params.toString()}`);
+                const response = await fetch(`/api/church?${params.toString()}`);
+                const data = await response.json();
+                
+                chPages = data.pages || 1;
+                updateCooperHewittPager(data);
+                
+                if (chIsDetailedView) {
+                    renderCooperHewittDetailedView(data);
+                } else {
+                    renderCooperHewittTableView(data);
+                }
+            } catch (error) {
+                console.error('Cooper Hewitt search error:', error);
+                document.getElementById('ch-table-body').innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 20px; color: #ff6b6b;">Error loading data: ${error.message}</td></tr>`;
+            } finally {
+                // Restore button state
+                searchButton.disabled = false;
+                searchButton.textContent = 'Search';
+            }
+        }
+        
+        function renderCooperHewittTableView(data) {
+            const container = document.getElementById('ch-table-body');
+            container.innerHTML = "";
+            
+            if (!data.objects) {
+                container.innerHTML = "<tr><td colspan='6'>No data found.</td></tr>";
+                return;
+            }
+            
+            // Store current artworks for selection
+            chCurrentArtworks = data.objects;
+            
+            data.objects.forEach((o, index) => {
+                const row = document.createElement("tr");
+                const isSelected = chSelectedArtworks.find(a => a.id === o.id);
+                if (isSelected) row.classList.add('selected');
+                
+                let imageCell;
+                if (o.images && o.images.length > 0 && o.images[0].large) {
+                    const img = document.createElement('img');
+                    img.src = o.images[0].large;
+                    img.alt = o.title || 'Untitled';
+                    img.className = 'clickable-image';
+                    img.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:4px;';
+                    imageCell = img.outerHTML;
+                } else {
+                    imageCell = '<span style="color:#999;">No image</span>';
+                }
+                
+                row.innerHTML = `
+                    <td class="checkbox-cell">
+                        <input type="checkbox" ${isSelected ? 'checked' : ''} 
+                               onchange="toggleArtworkSelection(this, '${o.id}', ${index})">
+                    </td>
+                    <td class="image-cell">${imageCell}</td>
+                    <td><strong>${o.title || "Untitled"}</strong></td>
+                    <td>${o.display_date || ""}</td>
+                    <td>${o.accession_number || ""}</td>
+                    <td>${o.medium || ""}</td>
+                `;
+                container.appendChild(row);
+            });
+        }
+        
+        function renderCooperHewittDetailedView(data) {
+            const container = document.getElementById("ch-detailed-content");
+            container.innerHTML = "";
+            
+            if (!data.objects || data.objects.length === 0) {
+                container.innerHTML = '<p>No objects found.</p>';
+                return;
+            }
+            
+            // Store current artworks for selection
+            chCurrentArtworks = data.objects;
+            
+            // Simple detailed view - just show basic info with checkboxes
+            for (let i = 0; i < data.objects.length; i++) {
+                const o = data.objects[i];
+                const isSelected = chSelectedArtworks.find(a => a.id === o.id);
+                
+                const card = document.createElement('div');
+                card.className = 'artwork-card';
+                if (isSelected) card.classList.add('selected');
+                
+                card.innerHTML = '<div style="padding: 20px; border: 1px solid #444; margin: 10px 0; background: #1a1a1a;"><h3>' + (o.title || 'Untitled') + '</h3><p>' + (o.display_date || '') + ' • ' + (o.accession_number || '') + '</p></div>';
+                
+                // Add checkbox
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = isSelected;
+                checkbox.style.margin = '10px';
+                checkbox.onchange = function() {
+                    toggleArtworkSelection(this, o.id, i);
+                };
+                
+                card.insertBefore(checkbox, card.firstChild);
+                container.appendChild(card);
+            }
+        }
+        
+        function toggleArtworkSelection(checkbox, artworkId, artworkIndex) {
+            console.log('toggleArtworkSelection called:', { checkbox, artworkId, artworkIndex });
+            const row = checkbox.closest('tr') || checkbox.closest('.artwork-card');
+            
+            if (checkbox.checked) {
+                // Add to selected
+                const artwork = chCurrentArtworks[artworkIndex];
+                if (artwork && !chSelectedArtworks.find(a => a.id === artworkId)) {
+                    chSelectedArtworks.push(artwork);
+                    console.log('Added to selection:', artwork.title, 'Total selected:', chSelectedArtworks.length);
+                }
+                row?.classList.add('selected');
+            } else {
+                // Remove from selected
+                chSelectedArtworks = chSelectedArtworks.filter(a => a.id !== artworkId);
+                console.log('Removed from selection. Total selected:', chSelectedArtworks.length);
+                row?.classList.remove('selected');
+            }
+            
+            // Update import button text
+            const button = document.getElementById('ch-importSelected');
+            button.textContent = `Import Selected (${chSelectedArtworks.length}) to Canvas`;
+            console.log('Updated button text to reflect:', chSelectedArtworks.length, 'selected');
+        }
+        
+        function selectAllCooperHewittArtworks() {
+            console.log('Select All clicked, current artworks:', chCurrentArtworks.length);
+            
+            // Select all current page artworks
+            chCurrentArtworks.forEach((artwork, index) => {
+                if (!chSelectedArtworks.find(a => a.id === artwork.id)) {
+                    chSelectedArtworks.push(artwork);
+                }
+            });
+            
+            // Check all checkboxes on current page
+            document.querySelectorAll('.cooper-hewitt-browser input[type="checkbox"]').forEach(cb => {
+                cb.checked = true;
+                const row = cb.closest('tr') || cb.closest('.artwork-card');
+                row?.classList.add('selected');
+            });
+            
+            // Update button text
+            const button = document.getElementById('ch-importSelected');
+            button.textContent = `Import Selected (${chSelectedArtworks.length}) to Canvas`;
+            console.log('Selected all artworks. Total selected:', chSelectedArtworks.length);
+        }
+        
+        function selectNoCooperHewittArtworks() {
+            console.log('Select None clicked');
+            
+            // Clear all selections
+            chSelectedArtworks = [];
+            
+            // Uncheck all checkboxes
+            document.querySelectorAll('.cooper-hewitt-browser input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+                const row = cb.closest('tr') || cb.closest('.artwork-card');
+                row?.classList.remove('selected');
+            });
+            
+            // Update button text
+            const button = document.getElementById('ch-importSelected');
+            button.textContent = `Import Selected (0) to Canvas`;
+            console.log('Cleared all selections');
+        }
+        
+        async function importSelectedArtworks() {
+            if (chSelectedArtworks.length === 0) {
+                alert('Please select some artworks to import.');
+                return;
+            }
+            
+            const button = document.getElementById('ch-importSelected');
+            const importCount = chSelectedArtworks.length; // Store count before clearing
+            button.disabled = true;
+            button.textContent = 'Importing...';
+            
+            try {
+                for (const artwork of chSelectedArtworks) {
+                    // Get the best available image URL
+                    let imageUrl = null;
+                    if (artwork.thumbnail) {
+                        imageUrl = artwork.thumbnail;
+                    } else if (artwork.images && artwork.images.length > 0) {
+                        const firstImage = artwork.images[0];
+                        imageUrl = firstImage.large || firstImage.preview || firstImage.original;
+                    }
+                    
+                    if (imageUrl) {
+                        await imageImporter.importCooperHewittImage(artwork, imageUrl);
+                    }
+                }
+                
+                // Log current state for debugging
+                console.log('Import completed, appImages.length:', appImages.length);
+                console.log('Last few images:', appImages.slice(-3));
+                
+                // Update UI and clear selections
+                imageImporter.updateUI();
+                
+                // Uncheck all checkboxes
+                document.querySelectorAll('.cooper-hewitt-browser input[type="checkbox"]').forEach(cb => {
+                    cb.checked = false;
+                    cb.closest('tr')?.classList.remove('selected');
+                    cb.closest('.artwork-card')?.classList.remove('selected');
+                });
+                
+                // Clear selections after successful import
+                chSelectedArtworks = [];
+                
+                // Switch to Local Files tab so user can see imported items
+                showImportMethod('local');
+                
+                alert(`Successfully imported ${importCount} artworks! Check the "Local Files" tab to see them.`);
+            } catch (error) {
+                console.error('Import error:', error);
+                alert('Error importing artworks: ' + error.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Import Selected to Canvas';
+            }
+        }
+        
+        function navigateCooperHewitt(direction) {
+            const newPage = chPage + direction;
+            if (newPage >= 1 && newPage <= chPages) {
+                chPage = newPage;
+                searchCooperHewitt();
+            }
+        }
+        
+        function toggleCooperHewittView() {
+            chIsDetailedView = !chIsDetailedView;
+            const button = document.getElementById('ch-toggleView');
+            const table = document.getElementById('ch-table');
+            const detailedView = document.getElementById('ch-detailed-view');
+            
+            if (chIsDetailedView) {
+                button.textContent = 'Switch to Table View';
+                table.style.display = 'none';
+                detailedView.style.display = 'block';
+            } else {
+                button.textContent = 'Switch to Detailed View';
+                table.style.display = 'table';
+                detailedView.style.display = 'none';
+            }
+            
+            // Re-render current data with new view
+            searchCooperHewitt();
+        }
+        
+        function updateCooperHewittPager(data) {
+            const info = document.getElementById('ch-info');
+            const prevBtn = document.getElementById('ch-prev');
+            const nextBtn = document.getElementById('ch-next');
+            
+            info.textContent = `Page ${chPage} of ${chPages} (${data.total || 0} total)`;
+            prevBtn.disabled = chPage <= 1;
+            nextBtn.disabled = chPage >= chPages;
+        }
+    </script>
 </body>
 </html>

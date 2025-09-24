@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Art History Canvas - Frederic Edwin Church Collection</title>
+<meta http-equiv="refresh" content="0; url=./ClaudeImageSorter.html">
+<style>
+  body { 
+    font:14px system-ui,Segoe UI,Arial;
+    margin:24px; 
+    background: #f8f8f8;
+    color: #333;
+    text-align: center;
+    padding: 50px;
+  }
+  header { 
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-bottom:12px;
+    flex-wrap:wrap;
+    padding: 16px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    border: 1px solid #333;
+  }
+  input,button { 
+    font:14px inherit;
+    padding:6px 10px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: #ffffff;
+    border-radius: 4px;
+  }
+  input::placeholder {
+    color: #999;
+  }
+  button {
+    background: #333;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #444;
+  }
+  table { 
+    border-collapse:collapse;
+    width:100%;
+    margin-top:12px;
+    background: #1a1a1a;
+  }
+  th,td { 
+    border:1px solid #444;
+    padding:8px;
+    text-align:left;
+    vertical-align:top;
+    color: #ffffff;
+  }
+  th { 
+    background:#2a2a2a;
+    position:sticky;
+    top:0; 
+  }
+  th:first-child, td:first-child { width:100px;text-align:center; }
+  td img { border-radius:4px; }
+  .pager { 
+    margin:12px 0;
+    display:flex;
+    gap:8px;
+    align-items:center;
+    color: #ffffff;
+  }
+  .pager button {
+    background: #333;
+    color: #ffffff;
+    border: 1px solid #555;
+  }
+  .pager button:hover {
+    background: #444;
+  }
+  
+  /* Detailed View Styles */
+  .artwork-card { 
+    border: 1px solid #444; 
+    margin-bottom: 24px; 
+    border-radius: 8px; 
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+  .artwork-header { 
+    background: #2a2a2a; 
+    padding: 16px; 
+    border-bottom: 1px solid #444;
+  }
+  .artwork-title { 
+    margin: 0; 
+    color: #ffffff; 
+    font-size: 20px; 
+  }
+  .artwork-subtitle { 
+    margin: 4px 0 0 0; 
+    color: #ccc; 
+    font-size: 14px; 
+  }
+  .artwork-body { 
+    padding: 16px; 
+    display: grid; 
+    grid-template-columns: 300px 1fr; 
+    gap: 20px;
+  }
+  .artwork-image { 
+    text-align: center;
+  }
+  .artwork-image img { 
+    max-width: 100%; 
+    max-height: 300px; 
+    border-radius: 4px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .artwork-details { min-height: 1px; }
+  .detail-section { 
+    margin-bottom: 16px; 
+  }
+  .detail-label { 
+    font-weight: bold; 
+    color: #ffffff; 
+    margin-bottom: 4px;
+  }
+  .detail-value { 
+    margin-bottom: 8px; 
+    line-height: 1.4;
+    color: #ccc;
+  }
+  .tag-list { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 4px;
+  }
+  .tag { 
+    background: #444; 
+    padding: 2px 8px; 
+    border-radius: 12px; 
+    font-size: 12px; 
+    color: #ffffff;
+  }
+  .link-button { 
+    display: inline-block; 
+    background: #555; 
+    color: #ffffff; 
+    padding: 8px 16px; 
+    text-decoration: none; 
+    border-radius: 4px; 
+    font-size: 14px;
+    border: 1px solid #666;
+  }
+  .link-button:hover { 
+    background: #666; 
+  }
+  
+  /* Spreadsheet View Styles */
+  .spreadsheet-view {
+    margin: 20px 0;
+    overflow-x: auto;
+    background: #1a1a1a;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(255,255,255,0.1);
+    border: 1px solid #333;
+  }
+
+  .spreadsheet-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.4;
+    min-width: 1400px; /* Ensure horizontal scrolling for many columns */
+    background: #1a1a1a;
+  }
+
+  .spreadsheet-table th {
+    background: linear-gradient(135deg, #333 0%, #444 100%);
+    color: #ffffff;
+    padding: 12px 8px;
+    text-align: left;
+    font-weight: 600;
+    border-right: 1px solid #555;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+
+  .spreadsheet-table th:last-child {
+    border-right: none;
+  }
+
+  .spreadsheet-table td {
+    padding: 8px;
+    border-bottom: 1px solid #333;
+    border-right: 1px solid #2a2a2a;
+    vertical-align: top;
+    max-width: 200px;
+    overflow: hidden;
+    color: #ffffff;
+    background: #1a1a1a;
+  }
+
+  .spreadsheet-table td:last-child {
+    border-right: none;
+  }
+
+  .spreadsheet-table tr:nth-child(even) td {
+    background-color: #222;
+  }
+
+  .spreadsheet-table tr:hover td {
+    background-color: #2a2a2a !important;
+  }
+
+  /* Specific column styling */
+  .image-cell {
+    text-align: center;
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
+  }
+
+  .title-cell {
+    min-width: 200px;
+    font-weight: 600;
+  }
+
+  .description-cell, .exhibitions-cell, .provenance-cell {
+    max-width: 300px;
+    word-wrap: break-word;
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .description-text {
+    position: relative;
+  }
+
+  .description-text.collapsed {
+    max-height: 4.8em; /* ~4 lines at 1.2em line height */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+  }
+
+  .description-expand-btn {
+    color: #007acc;
+    cursor: pointer;
+    font-weight: 500;
+    text-decoration: underline;
+    font-size: 11px;
+    margin-top: 2px;
+    display: inline-block;
+  }
+
+  .description-expand-btn:hover {
+    color: #005a99;
+  }
+
+  .legal-cell, .identifiers-cell {
+    max-width: 250px;
+    font-size: 12px;
+  }
+
+  .link-cell {
+    text-align: center;
+    width: 60px;
+    min-width: 60px;
+  }
+
+  .spreadsheet-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+
+  .spreadsheet-tag {
+    background: #555;
+    color: #ffffff;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 500;
+    white-space: nowrap;
+    display: inline-block;
+  }
+
+  .spreadsheet-link {
+    color: #66b3ff;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    background: #2a2a2a;
+    display: inline-block;
+    border: 1px solid #444;
+  }
+
+  .spreadsheet-link:hover {
+    background: #555;
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .spreadsheet-image {
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+
+  /* Image Modal Styles */
+  .image-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(3px);
+  }
+
+  .image-modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .image-modal-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    background: #1a1a1a;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    border: 1px solid #444;
+  }
+
+  .image-modal img {
+    display: block;
+    max-width: 100%;
+    max-height: 85vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .image-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+  }
+
+  .image-modal-close:hover {
+    background: rgba(0, 0, 0, 0.9);
+  }
+
+  .image-modal-info {
+    padding: 15px 20px;
+    background: #1a1a1a;
+    border-top: 1px solid #444;
+  }
+
+  .image-modal-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #ffffff;
+    margin-bottom: 5px;
+  }
+
+  .image-modal-meta {
+    font-size: 12px;
+    color: #ccc;
+    line-height: 1.4;
+  }
+
+  .clickable-image {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .clickable-image:hover {
+    opacity: 0.8;
+  }
+  
+  @media (max-width: 768px) {
+    .artwork-body { 
+      grid-template-columns: 1fr; 
+    }
+    .spreadsheet-table th {
+      min-width: 100px;
+      width: 120px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Image Modal -->
+<div id="imageModal" class="image-modal">
+  <div class="image-modal-content">
+    <button class="image-modal-close" onclick="closeImageModal()">&times;</button>
+    <img id="modalImage" src="" alt="">
+    <div class="image-modal-info">
+      <div class="image-modal-title" id="modalTitle"></div>
+      <div class="image-modal-meta" id="modalMeta"></div>
+    </div>
+  </div>
+</div>
+
+<header>
+  <h1 style="margin:0">Frederic E. Church @ Cooper Hewitt</h1>
+  <label>Query <input id="q" placeholder="optional keyword"></label>
+  <label>Per page <input id="pp" type="number" value="50" min="1" max="500"></label>
+  <button id="go">Search</button>
+  <button id="toggleView">Switch to Detailed View</button>
+</header>
+
+<div class="pager">
+  <button id="prev">Prev</button>
+  <span id="info"></span>
+  <button id="next">Next</button>
+</div>
+
+<!-- Table View -->
+<table id="t" style="display:table">
+  <thead>
+    <tr><th>Thumbnail</th><th>Title</th><th>Date</th><th>Accession</th><th>Medium</th><th>Link</th></tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<!-- Detailed View -->
+<div id="detailed-view" style="display:none">
+  <div id="detailed-content"></div>
+</div>
+
+<script>
+let page = 1, pages = 1, isDetailedView = false;
+
+function renderTableView(data) {
+  const container = document.querySelector("#t tbody");
+  container.innerHTML = "";
+  
+  if (!data.objects) {
+    container.innerHTML = "<tr><td colspan='6'>No data found.</td></tr>";
+    return;
+  }
+  
+  for (const o of data.objects) {
+    const row = document.createElement("tr");
+    
+    let imageCell;
+    if (o.images && o.images.length > 0 && o.images[0].large) {
+      const img = document.createElement('img');
+      img.src = o.images[0].large;
+      img.alt = o.title || 'Untitled';
+      img.className = 'clickable-image';
+      img.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:4px;';
+      img.onclick = () => openImageModal(
+        o.images[0].original || o.images[0].large,
+        o.title || 'Untitled',
+        o.display_date || '',
+        o.accession_number || '',
+        o.medium || ''
+      );
+      imageCell = img.outerHTML;
+    } else {
+      imageCell = '<span style="color:#999;">No image</span>';
+    }
+    
+    row.innerHTML = `
+      <td>${imageCell}</td>
+      <td><strong>${o.title || "Untitled"}</strong></td>
+      <td>${o.display_date || ""}</td>
+      <td>${o.accession_number || ""}</td>
+      <td>${o.medium || ""}</td>
+      <td><a href="${o.url}" target="_blank" rel="noopener">View</a></td>
+    `;
+    container.appendChild(row);
+  }
+}
+
+function renderDetailedView(data) {
+  const container = document.getElementById("detailed-content");
+  container.innerHTML = "";
+  
+  if (!data.objects || data.objects.length === 0) {
+    container.innerHTML = '<p>No objects found.</p>';
+    return;
+  }
+  
+  // Create the main spreadsheet table
+  const table = document.createElement('table');
+  table.className = 'spreadsheet-table';
+  
+  // Create header row
+  const headerRow = document.createElement('tr');
+  headerRow.innerHTML = `
+    <th>Image</th>
+    <th>Title</th>
+    <th>Date</th>
+    <th>Accession Number</th>
+    <th>Object Type</th>
+    <th>Medium & Materials</th>
+    <th>Measurements</th>
+    <th>Geography</th>
+    <th>Cultural Context</th>
+    <th>Period</th>
+    <th>Classification</th>
+    <th>Department</th>
+    <th>Status</th>
+    <th>Location</th>
+    <th>Exhibitions</th>
+    <th>Provenance</th>
+    <th>Legal & Rights</th>
+    <th>Description</th>
+    <th>Identifiers</th>
+    <th>Link</th>
+  `;
+  table.appendChild(headerRow);
+  
+  // Create data rows
+  for (const o of data.objects) {
+    const row = document.createElement('tr');
+    
+    // Helper functions for data formatting
+    const formatArray = (arr, tagClass = '') => {
+      if (!arr || arr.length === 0) return '';
+      if (tagClass) {
+        return `<div class="spreadsheet-tags">${arr.map(item => `<span class="spreadsheet-tag">${item}</span>`).join('')}</div>`;
+      }
+      return arr.join(', ');
+    };
+    
+    const formatExhibitions = (exhibitions) => {
+      if (!exhibitions || exhibitions.length === 0) return '';
+      return exhibitions.map(ex => `"${ex.title}" (${ex.date || 'Date unknown'})`).join('; ');
+    };
+    
+    const formatIdentifiers = (identifiers) => {
+      if (!identifiers || identifiers.length === 0) return '';
+      return identifiers.map(id => `${id.type}: ${id.value}`).join('; ');
+    };
+    
+    const formatLegal = (legal) => {
+      if (!legal) return '';
+      const parts = [];
+      if (legal.credit) parts.push(`Credit: ${legal.credit}`);
+      if (legal.rights) parts.push(`Rights: ${legal.rights}`);
+      return parts.join('; ');
+    };
+    
+    const formatDescription = (description) => {
+      if (!description || description.length === 0) return '';
+      const fullText = description.map(d => d.value || d).join(' ');
+      if (fullText.length <= 200) {
+        return fullText; // Short descriptions don't need collapsing
+      }
+      
+      const id = 'desc-' + Math.random().toString(36).substr(2, 9);
+      return `
+        <div class="description-text collapsed" id="${id}">
+          ${fullText}
+        </div>
+        <div class="description-expand-btn" onclick="toggleDescription('${id}')">
+          Show more...
+        </div>
+      `;
+    };
+    
+    const imageHtml = o.images && o.images.length > 0 && o.images[0].large
+      ? `<img src="${o.images[0].large}" alt="${o.title}" class="spreadsheet-image clickable-image" 
+           onclick="openImageModal('${(o.images[0].original || o.images[0].large).replace(/'/g, '&quot;')}', 
+                                   '${(o.title || 'Untitled').replace(/'/g, '&quot;')}', 
+                                   '${(o.display_date || '').replace(/'/g, '&quot;')}', 
+                                   '${(o.accession_number || '').replace(/'/g, '&quot;')}', 
+                                   '${(o.medium || '').replace(/'/g, '&quot;')}')"
+           style="width:60px;height:60px;object-fit:cover;" />`
+      : '<span style="color:#999;font-size:12px;">No image</span>';
+    
+    row.innerHTML = `
+      <td class="image-cell">${imageHtml}</td>
+      <td class="title-cell"><strong>${o.title || 'Untitled'}</strong></td>
+      <td>${o.display_date || ''}</td>
+      <td>${o.accession_number || ''}</td>
+      <td>${formatArray(o.name, 'tag')}</td>
+      <td>${o.medium || ''}</td>
+      <td>${o.measurements && o.measurements.dimensions ? o.measurements.dimensions.join('; ') : ''}</td>
+      <td>${o.geography ? (o.geography.name || o.geography.country || '') : ''}</td>
+      <td>${formatArray(o.culture, 'tag')}</td>
+      <td>${formatArray(o.period, 'tag')}</td>
+      <td>${formatArray(o.classification, 'tag')}</td>
+      <td>${formatArray(o.department)}</td>
+      <td>${o.status || ''}</td>
+      <td>${o.location || ''}</td>
+      <td class="exhibitions-cell">${formatExhibitions(o.exhibitions)}</td>
+      <td class="provenance-cell">${o.provenance ? o.provenance.join('; ') : ''}</td>
+      <td class="legal-cell">${formatLegal(o.legal)}</td>
+      <td class="description-cell">${formatDescription(o.description)}</td>
+      <td class="identifiers-cell">${formatIdentifiers(o.identifiers)}</td>
+      <td class="link-cell"><a href="${o.url}" target="_blank" rel="noopener" class="spreadsheet-link">View</a></td>
+    `;
+    
+    table.appendChild(row);
+  }
+  
+  // Add table to container with wrapper for horizontal scrolling
+  const wrapper = document.createElement('div');
+  wrapper.className = 'spreadsheet-view';
+  wrapper.style.overflowX = 'auto';
+  wrapper.appendChild(table);
+  container.appendChild(wrapper);
+}
+
+function toggleDescription(id) {
+  const element = document.getElementById(id);
+  const button = element.nextElementSibling;
+  
+  if (element.classList.contains('collapsed')) {
+    element.classList.remove('collapsed');
+    button.textContent = 'Show less...';
+  } else {
+    element.classList.add('collapsed');
+    button.textContent = 'Show more...';
+  }
+}
+
+function openImageModal(imageUrl, title, date, accessionNumber, medium) {
+  const modal = document.getElementById('imageModal');
+  const modalImage = document.getElementById('modalImage');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalMeta = document.getElementById('modalMeta');
+  
+  modalImage.src = imageUrl;
+  modalTitle.textContent = title || 'Untitled';
+  modalMeta.innerHTML = `
+    ${date ? `<div><strong>Date:</strong> ${date}</div>` : ''}
+    ${accessionNumber ? `<div><strong>Accession:</strong> ${accessionNumber}</div>` : ''}
+    ${medium ? `<div><strong>Medium:</strong> ${medium}</div>` : ''}
+  `;
+  
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+function closeImageModal() {
+  const modal = document.getElementById('imageModal');
+  modal.classList.remove('show');
+  document.body.style.overflow = 'auto'; // Restore scrolling
+}
+
+// Close modal when clicking outside the image
+document.getElementById('imageModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeImageModal();
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeImageModal();
+  }
+});
+
+async function fetchPage() {
+  const pp = document.getElementById("pp").value || "50";
+  const q  = document.getElementById("q").value.trim();
+  const url = `/api/church?per_page=${encodeURIComponent(pp)}&page=${encodeURIComponent(page)}${q ? "&query="+encodeURIComponent(q):""}`;
+
+  const r = await fetch(url);
+  if (!r.ok) throw new Error("HTTP "+r.status);
+  const data = await r.json();
+
+  pages = data.pages || 1;
+  document.getElementById("info").textContent = `Page ${page} of ${pages} — ${data.total||0} objects`;
+
+  if (isDetailedView) {
+    renderDetailedView(data);
+  } else {
+    renderTableView(data);
+  }
+}
+
+function toggleView() {
+  isDetailedView = !isDetailedView;
+  const tableView = document.getElementById("t");
+  const detailedView = document.getElementById("detailed-view");
+  const toggleButton = document.getElementById("toggleView");
+  
+  if (isDetailedView) {
+    tableView.style.display = "none";
+    detailedView.style.display = "block";
+    toggleButton.textContent = "Switch to Table View";
+    // Reduce per page for detailed view since it shows more data
+    const ppInput = document.getElementById("pp");
+    if (parseInt(ppInput.value) > 10) {
+      ppInput.value = "10";
+    }
+  } else {
+    tableView.style.display = "table";
+    detailedView.style.display = "none";
+    toggleButton.textContent = "Switch to Detailed View";
+  }
+  
+  // Refresh current page with new view
+  fetchPage().catch(alert);
+}
+
+document.getElementById("go").onclick = ()=>{ page=1; fetchPage().catch(alert); };
+document.getElementById("prev").onclick = ()=>{ if(page>1){ page--; fetchPage().catch(alert);} };
+document.getElementById("next").onclick = ()=>{ if(page<pages){ page++; fetchPage().catch(alert);} };
+document.getElementById("toggleView").onclick = toggleView;
+
+// initial load
+fetchPage().catch(err => { document.getElementById("info").textContent = err.message; });
+</script>
+
+</body>
+</html>
